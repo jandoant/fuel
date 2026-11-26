@@ -27,3 +27,6 @@
 | 23 | App name is **Fuel** (formerly "Body & Nutrition") | Confirmed by Jan 2026-11-26 |
 | 24 | Application id `dev.jandoant.fuel` | Confirmed by Jan 2026-11-26; must never change (a new id means reinstall and losing local data) |
 | 25 | App icon: flame whose inner core is a leaf, gradient from accent green (base) to fat orange (tip) on warm off-white (`assets/icon/`) | Represents "Fuel" = food as energy; matches style D |
+| 26 | Targets maths defaults (details and rejected alternatives in `docs/maths-assumptions.md`): trend α 0.10/day on the first weigh-in of the day; reference weight = average trend over the 7/14/28-day window; maintenance updated weekly by a Kalman step (~30 % of the gap per week in steady state) | Confirmed by Jan 2026-11-26; weight swings are physiological, and slower adaptation keeps targets calm |
+| 27 | "N left" never goes below 0; between target and the zone's top the status says "X above target" | Confirmed by Jan 2026-11-26; a negative "left" was confusing |
+| 28 | Actual rate (%/week) comes from the same 28-day weigh-in regression as "Balance from weight" | Confirmed by Jan 2026-11-26; Energy and Body show consistent numbers, less jumpy than a 7-day difference |
