@@ -7,7 +7,9 @@ plugins {
 android {
     namespace = "dev.jandoant.fuel"
     // Android 17. Verify the API level in the SDK Manager when first opening the project.
-    compileSdk = 37
+    compileSdk {
+        version = release(37) { minorApiLevel = 1 }
+    }
 
     defaultConfig {
         applicationId = "dev.jandoant.fuel"
