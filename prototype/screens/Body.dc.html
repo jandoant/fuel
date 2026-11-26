@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Body</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="flex-grow: 1; padding: 16px 18px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{openMenu}}" aria-label="Open menu" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Body</h1>
+</div>
+<div role="tablist" aria-label="Time range" style="display: flex; background: #EFE9E1; border-radius: 10px; padding: 3px">
+<sc-for list="{{ranges}}" as="r" hint-placeholder-count="3">
+<button role="tab" aria-selected="{{r.selected}}" onClick="{{r.pick}}" style="border: none; font: inherit; font-size: 13px; font-weight: {{r.weight}}; padding: 0 9px; min-height: 36px; border-radius: 8px; white-space: nowrap; background: {{r.bg}}; color: #1E1B18">{{r.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; color: #776E65">Trend weight</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 700">78.4 <span style="font-size: 15px; color: #776E65">kg</span></span>
+</div>
+<div style="text-align: right; display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Manrope', sans-serif; font-size: 15px; color: #177A50">{{delta}}</span>
+<span style="font-size: 12px; color: #776E65">{{deltaLabel}}</span>
+</div>
+</div>
+<svg width="322" height="120" viewBox="0 0 322 150" role="img" aria-label="Daily weigh-ins as dots with a smoothed trend line, trending down">
+<line x1="0" y1="30" x2="322" y2="30" stroke="#F2EDE6"/>
+<line x1="0" y1="75" x2="322" y2="75" stroke="#F2EDE6"/>
+<line x1="0" y1="120" x2="322" y2="120" stroke="#F2EDE6"/>
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="20">
+<circle cx="{{d.x}}" cy="{{d.y}}" r="2.5" fill="#CFC6BB"/>
+</sc-for>
+<polyline points="{{trend}}" fill="none" stroke="#22A06B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="318" y="26" text-anchor="end" font-size="10" fill="#857C73" font-family="Manrope, sans-serif">{{yTop}}</text>
+<text x="318" y="71" text-anchor="end" font-size="10" fill="#857C73" font-family="Manrope, sans-serif">{{yMid}}</text>
+<text x="318" y="116" text-anchor="end" font-size="10" fill="#857C73" font-family="Manrope, sans-serif">{{yBot}}</text>
+<text x="8" y="146" font-size="10" fill="#857C73" font-family="Manrope, sans-serif">{{xStart}}</text>
+<text x="298" y="146" text-anchor="end" font-size="10" fill="#857C73" font-family="Manrope, sans-serif">Today</text>
+</svg>
+<div style="display: flex; gap: 16px; font-size: 12px; color: #776E65">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 4px; background: #CFC6BB"></span>Daily weigh-in</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #22A06B"></span>Trend</span>
+</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">Composition</span>
+<span style="font-size: 12px; color: #776E65">{{deltaLabel}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{compCharts}}" as="c" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 1px">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #776E65"><span style="width: 12px; height: 3px; border-radius: 2px; background: {{c.color}}"></span>{{c.label}}</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700">≈ {{c.value}} <span style="font-size: 11px; color: #776E65; font-weight: 600">{{c.unit}}</span></span>
+<span style="font-size: 11px; color: {{c.trendColor}}">{{c.trend}}</span>
+</div>
+</sc-for>
+</div>
+<svg width="322" height="84" viewBox="0 0 322 84" role="img" aria-label="Body fat percentage on the left axis from 0 to 30 and lean mass on the right axis from 0 to 80 kilograms, smoothed trends with likely ranges">
+<line x1="22" y1="6" x2="300" y2="6" stroke="#F2EDE6"/>
+<line x1="22" y1="43" x2="300" y2="43" stroke="#F2EDE6"/>
+<line x1="22" y1="80" x2="300" y2="80" stroke="#DED6CB"/>
+<sc-for list="{{compCharts}}" as="c" hint-placeholder-count="2">
+<polygon points="{{c.band}}" fill="{{c.bandFill}}"/>
+<sc-for list="{{c.dots}}" as="d" hint-placeholder-count="20">
+<circle cx="{{d.x}}" cy="{{d.y}}" r="1.6" fill="{{c.dotFill}}"/>
+</sc-for>
+<polyline points="{{c.line}}" fill="none" stroke="{{c.color}}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+</sc-for>
+<text x="18" y="10" text-anchor="end" font-size="9" fill="#EA6A2A" font-family="Manrope, sans-serif">30%</text>
+<text x="18" y="47" text-anchor="end" font-size="9" fill="#EA6A2A" font-family="Manrope, sans-serif">15</text>
+<text x="18" y="83" text-anchor="end" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">0</text>
+<text x="304" y="10" font-size="9" fill="#4F46E5" font-family="Manrope, sans-serif">80kg</text>
+<text x="304" y="47" font-size="9" fill="#4F46E5" font-family="Manrope, sans-serif">40</text>
+<text x="304" y="83" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">0</text>
+</svg>
+<div style="font-size: 11px; color: #857C73">Estimated by the scale · line = smoothed trend, band = likely range · not used in calculations</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">Balance from weight</span>
+<span style="font-size: 12px; color: #776E65">{{balWindow}}</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 700">≈ {{bal}}<span style="font-size: 13px; color: #776E65; font-weight: 600"> kcal/day</span></span>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #E6F5EC; color: #136A45">{{balLabel}}</span>
+</div>
+<svg width="322" height="26" viewBox="0 0 322 26" role="img" aria-label="Estimated balance on a scale from minus 600 to plus 600 kcal per day, with its likely range">
+<rect x="0" y="9" width="322" height="6" rx="3" fill="#F2EDE6"/>
+<line x1="161" y1="4" x2="161" y2="20" stroke="#B5ABA0"/>
+<rect x="{{bandX}}" y="7" width="{{bandW}}" height="10" rx="5" fill="#CDEBDC"/>
+<circle cx="{{dotX}}" cy="12" r="5" fill="#22A06B"/>
+<text x="0" y="26" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">−600</text>
+<text x="161" y="26" text-anchor="middle" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">0</text>
+<text x="322" y="26" text-anchor="end" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">+600</text>
+</svg>
+<div style="font-size: 12px; color: #776E65">Likely {{balRange}} · trend {{slope}} kg/week · no calorie data used</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">Recent measurements</h2>
+</div>
+<sc-for list="{{log}}" as="l" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: 1fr 64px 52px; align-items: center; font-size: 13px; padding: 6px 2px; border-bottom: 1px solid #EFE9E1">
+<span style="color: #776E65">{{l.date}}</span>
+<span style="font-family: 'Manrope', sans-serif; text-align: right">{{l.kg}}</span>
+<span style="font-family: 'Manrope', sans-serif; text-align: right; color: #776E65">{{l.bf}}</span>
+</div>
+</sc-for>
+</section>
+</div>
+
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; z-index: 10">
+<dc-import name="NavDrawer" active="Body" hint-size="300px,844px"></dc-import>
+<button onClick="{{closeMenu}}" aria-label="Close menu" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { range: '4W' }; }
+  renderVals() {
+    const range = this.state.range;
+    const cfg = {
+      '4W': { n: 28, keys: [[0, 79.6], [1, 78.4]], start: '29 Oct', label: 'last 4 weeks', noise: 1 },
+      '6M': { n: 60, keys: [[0, 81.4], [0.25, 81.6], [0.45, 80.2], [0.6, 80.4], [1, 78.4]], start: 'May', label: 'last 6 months', noise: 0.8 },
+      'All': { n: 72, keys: [[0, 84.0], [0.15, 85.1], [0.4, 82.3], [0.55, 82.6], [0.7, 81.5], [0.85, 80.0], [1, 78.4]], start: 'Jan 2025', label: 'since Jan 2025', noise: 0.7 }
+    }[range];
+    const base = (t) => {
+      const k = cfg.keys;
+      for (let j = 1; j < k.length; j++) if (t <= k[j][0]) {
+        const u = (t - k[j - 1][0]) / (k[j][0] - k[j - 1][0]);
+        return k[j - 1][1] + (k[j][1] - k[j - 1][1]) * (0.5 - Math.cos(Math.PI * u) / 2);
+      }
+      return k[k.length - 1][1];
+    };
+    const noise = [0.5, -0.3, 0.1, 0.7, -0.4, 0.2, -0.6, 0.4, 0.0, -0.2, 0.6, -0.5, 0.3, -0.1];
+    const raw = [];
+    const tr = [];
+    let ema = 0;
+    for (let i = 0; i < cfg.n; i++) {
+      const t = i / (cfg.n - 1);
+      const w = base(t) + noise[i % noise.length] * cfg.noise;
+      ema = i === 0 ? base(0) : ema + 0.2 * (w - ema);
+      raw.push(w); tr.push(i === cfg.n - 1 ? 78.4 : ema);
+    }
+    const hi = Math.max(...raw) + 0.2, lo = Math.min(...raw) - 0.2;
+    const yOf = (kg) => 30 + (hi - kg) / (hi - lo) * 90;
+    const xOf = (i) => (8 + i * (290 / (cfg.n - 1))).toFixed(1);
+    const dots = raw.map((w, i) => ({ x: xOf(i), y: yOf(w).toFixed(1) }));
+    const pts = tr.map((w, i) => xOf(i) + ',' + yOf(w).toFixed(1));
+    const drop = tr[0] - 78.4;
+    const noise2 = [0.3, -0.6, 0.8, -0.2, 0.1, -0.9, 0.5, 0.2, -0.4, 0.7, -0.1, -0.5, 0.6, -0.3, 0.0, 0.4];
+    const series = (name, color, bandFill, unit, now, k, amp, err, dec, yMax, dotFill) => {
+      const rawS = raw.map((w, i) => now + (base(i / (cfg.n - 1)) - 78.4) * k + noise2[i % noise2.length] * amp);
+      const sm = []; let e = 0;
+      rawS.forEach((v, i) => { e = i === 0 ? rawS.slice(0, 5).reduce((a, b) => a + b, 0) / 5 : e + 0.12 * (v - e); sm.push(e); });
+      const shift = now - sm[sm.length - 1];
+      const smA = sm.map((v, i) => v + shift * (i / (sm.length - 1)));
+      const sHi = yMax, sLo = 0;
+      const yS = (v) => (6 + (sHi - v) / (sHi - sLo) * 74).toFixed(1);
+      const xC = (i) => (24 + i * (274 / (cfg.n - 1))).toFixed(1);
+      const up = smA.map((v, i) => xC(i) + ',' + yS(v + err));
+      const dn = smA.map((v, i) => xC(i) + ',' + yS(v - err)).reverse();
+      const first = smA[0], last = smA[smA.length - 1], d = last - first;
+      return {
+        label: name, color, bandFill, value: now.toFixed(1), unit: unit + ' ±' + err,
+        trend: Math.abs(d) < err * 0.6 ? 'steady' : (d < 0 ? 'down ' : 'up ') + (d < 0 ? '−' : '+') + Math.abs(d).toFixed(1) + ' ' + dec,
+        trendColor: Math.abs(d) < err * 0.6 ? '#776E65' : '#177A50',
+        aria: name + ' estimate over the selected period, smoothed trend with likely range',
+        dots: rawS.map((v, i) => ({ x: xC(i), y: yS(v) })), dotFill: dotFill,
+        line: smA.map((v, i) => xC(i) + ',' + yS(v)).join(' '),
+        band: up.concat(dn).join(' '),
+        yHi: String(sHi), yLo: '0'
+      };
+    };
+    const compCharts = [
+      series('Body fat', '#EA6A2A', '#FBE0D0', '%', 17.8, 0.55, 1.1, 0.6, 'pp', 30, '#F5BFA0'),
+      series('Lean mass', '#4F46E5', '#DCDDFB', 'kg', 64.4, 0.12, 0.9, 0.8, 'kg', 80, '#C7C9F7')
+    ];
+    return {
+      menuOpen: !!this.state.menu, openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      ranges: [['4W', '4 weeks'], ['6M', '6 months'], ['All', 'All time']].map(([r, label]) => ({
+        label, selected: r === range ? 'true' : 'false',
+        bg: r === range ? '#FFFFFF' : 'transparent', weight: r === range ? '600' : '500',
+        pick: () => this.setState({ range: r })
+      })),
+      dots, trend: pts.join(' '),
+      yTop: hi.toFixed(1), yMid: ((hi + lo) / 2).toFixed(1), yBot: lo.toFixed(1), xStart: cfg.start,
+      ...(() => {
+        const days = 28;
+        const perDay = -1.2 * 7700 / days;
+        const err = 130;
+        const x = (k) => Math.max(0, Math.min(322, 161 + k * 161 / 600));
+        const r10 = (v) => Math.round(v / 10) * 10;
+        const fmt = (v) => (v < 0 ? '−' : '+') + Math.abs(r10(v));
+        return {
+          bal: fmt(perDay), balRange: fmt(perDay - err) + ' to ' + fmt(perDay + err),
+          balLabel: perDay < -50 ? 'Deficit' : perDay > 50 ? 'Surplus' : 'Maintenance',
+          balWindow: '28-day trend',
+          slope: '−' + (1.2 / days * 7).toFixed(2),
+          dotX: x(perDay).toFixed(1), bandX: x(perDay - err).toFixed(1),
+          bandW: (x(perDay + err) - x(perDay - err)).toFixed(1)
+        };
+      })(),
+      delta: (drop >= 0 ? '−' : '+') + Math.abs(drop).toFixed(1) + ' kg',
+      deltaLabel: cfg.label,
+      compCharts,
+      log: [
+        { date: 'Thu 26 Nov · 07:12', kg: '78.1 kg', bf: '17.6 %' },
+        { date: 'Wed 25 Nov · 07:05', kg: '78.9 kg', bf: '18.1 %' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Navigation drawer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<nav aria-label="Main navigation" style="width: 300px; height: 844px; box-sizing: border-box; background: #FFFFFF; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; padding: 22px 12px 18px; display: flex; flex-direction: column; gap: 4px; border-radius: 0 20px 20px 0">
+<div style="padding: 0 12px 14px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 18px; font-weight: 700">Body &amp; Nutrition</span>
+<span style="font-size: 12px; color: #776E65">Trend 78.4 kg · target 2,450 kcal</span>
+</div>
+<sc-for list="{{main}}" as="item" hint-placeholder-count="5">
+<a href="{{item.href}}" aria-current="{{item.current}}" style="display: flex; align-items: center; gap: 14px; min-height: 48px; padding: 0 14px; border-radius: 24px; background: {{item.bg}}; color: {{item.fg}}; font-size: 14px; font-weight: {{item.weight}}; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{item.icon}}"/></svg>{{item.label}}</a>
+</sc-for>
+<div style="height: 1px; background: #EFE9E1; margin: 10px 14px"></div>
+<sc-for list="{{secondary}}" as="item" hint-placeholder-count="3">
+<a href="{{item.href}}" aria-current="{{item.current}}" style="display: flex; align-items: center; gap: 14px; min-height: 48px; padding: 0 14px; border-radius: 24px; background: {{item.bg}}; color: {{item.fg}}; font-size: 14px; font-weight: {{item.weight}}; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{item.icon}}"/></svg>{{item.label}}</a>
+</sc-for>
+<div style="flex-grow: 1"></div>
+<div style="padding: 0 14px; font-size: 12px; color: #776E65; display: flex; align-items: center; gap: 6px">
+<span style="width: 7px; height: 7px; border-radius: 4px; background: #22A06B"></span>Google Health · synced 07:12</div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["Today","Meal plan","Calendar","Body","Energy","Trends","Weekly check-in","Recipes","My foods","Macro targets","Settings"],"default":"Today"},"$preview":{"width":300,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'Today';
+    const main = [
+      ['Today', 'Main.dc.html', 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
+      ['Meal plan', 'Plan.dc.html', 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 10h18M8 3v4M16 3v4'],
+      ['Calendar', 'Calendar.dc.html', 'M3 5h18v16H3zM3 10h18M9 10v11M15 10v11M3 15.5h18'],
+      ['Body', 'Body.dc.html', 'M3 17l5-5 4 3 8-8'],
+      ['Energy', 'Energy.dc.html', 'M13 2L4 14h7l-1 8 9-12h-7z'],
+      ['Trends', 'Trends.dc.html', 'M4 20V10M10 20V4M16 20v-7M22 20H2'],
+      ['Weekly check-in', 'CheckIn.dc.html', 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9']
+    ].map(([label, href, icon]) => {
+      const on = label === active;
+      return { label, href, icon, current: on ? 'page' : 'false', bg: on ? '#E6F5EC' : 'transparent', fg: on ? '#136A45' : '#1E1B18', weight: on ? '600' : '500' };
+    });
+    const secondary = [
+      ['Recipes', 'Recipes.dc.html', 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 3v3M15 3v3M12 2v4'],
+      ['My foods', 'AddFood.dc.html', 'M4 6h16M4 12h16M4 18h10'],
+      ['Macro targets', 'Targets.dc.html', 'M4 6h9m4 0h3M4 12h3m4 0h9M4 18h11m4 0h1M13 4v4M7 10v4M15 16v4'],
+      ['Settings', 'Settings.dc.html', 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12l2-1-1-3-2 .5-1.5-1.5.5-2-3-1-1 2h-2l-1-2-3 1 .5 2L6 9.5 4 9l-1 3 2 1v2l-2 1 1 3 2-.5L7.5 18 7 20l3 1 1-2h2l1 2 3-1-.5-2 1.5-1.5 2 .5 1-3-2-1z']
+    ].map(([label, href, icon]) => {
+      const on = label === active;
+      return { label, href, icon, current: on ? 'page' : 'false', bg: on ? '#E6F5EC' : 'transparent', fg: on ? '#136A45' : '#4A433C', weight: on ? '600' : '400' };
+    });
+    return { main, secondary };
+  }
+}
+</script>
+</body>
+</html>

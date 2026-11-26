@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Micronutrients (collapsible)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 100%; box-sizing: border-box; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; background: {{frameBg}}; border: {{frameBorder}}; border-radius: 18px; padding: {{framePad}}; display: flex; flex-direction: column">
+<button onClick="{{toggle}}" aria-expanded="{{expanded}}" style="width: 100%; min-height: 40px; border: none; background: transparent; padding: 0; font: inherit; color: #1E1B18; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: {{topRule}}">
+<span style="font-size: 13px; font-weight: 600">Micronutrients <span style="font-weight: 400; color: #776E65">· {{scopeLabel}}</span></span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: {{summaryColor}}">{{summary}}
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#776E65" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{chevron}})"><path d="M6 9l6 6 6-6"/></svg></span>
+</button>
+<sc-if value="{{open}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<span style="font-size: 11px; font-weight: 700; color: #776E65; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 0 2px">{{g.title}}</span>
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 1fr 70px 92px; align-items: center; column-gap: 8px; min-height: 22px; font-size: 12px">
+<span>{{r.name}}</span>
+<span style="height: 5px; border-radius: 3px; background: #EFE9E1; display: block; overflow: hidden"><span style="display: block; height: 100%; width: {{r.pct}}; background: {{r.bar}}"></span></span>
+<span style="text-align: right; font-family: 'Manrope', sans-serif; font-size: 11px; color: {{r.color}}; white-space: nowrap">{{r.val}} / {{r.ref}}</span>
+</div>
+</sc-for>
+</sc-for>
+<span style="font-size: 10px; color: #857C73; padding-top: 6px">Reference: DGE values for adults · limits as maximum · {{coverage}}</span>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"variant":{"editor":"enum","options":["today","day","avg"],"default":"day"},"framed":{"editor":"boolean","default":true},"$preview":{"width":354,"height":60}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { open: false }; }
+  renderVals() {
+    const v = this.props.variant ?? 'day';
+    const framed = this.props.framed ?? true;
+    const open = this.state.open;
+    const data = {
+      today: { scope: 'so far today', cov: '9 of 10 foods have full data', f: 0.52 },
+      day: { scope: 'this day', cov: '7 of 8 foods have full data', f: 1 },
+      avg: { scope: 'daily average', cov: 'averaged over logged days', f: 1.04 }
+    }[v];
+    const limits = [['Salt', 5.8, 6, 'g', 1], ['Free sugar', 48, 61, 'g', 0], ['Saturated fat', 19, 27, 'g', 0]];
+    const micros = [
+      ['Potassium', 3600, 4000, 'mg', 0], ['Calcium', 1150, 1000, 'mg', 0], ['Magnesium', 420, 350, 'mg', 0],
+      ['Iron', 13, 11, 'mg', 1], ['Zinc', 12, 14, 'mg', 0], ['Vitamin C', 95, 110, 'mg', 0],
+      ['Vitamin D', 4, 20, 'µg', 1], ['Vitamin B12', 5.1, 4, 'µg', 1], ['Folate', 260, 300, 'µg', 0]
+    ];
+    const fmt = (x, dec) => (dec ? x.toFixed(1) : String(Math.round(x))).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    let low = 0, high = 0;
+    const mk = (isLimit) => ([name, val, ref, unit, dec]) => {
+      const x = val * data.f;
+      const r = x / ref;
+      const over = isLimit && r > 1;
+      const under = !isLimit && v !== 'today' && r < 0.75;
+      if (over) high++;
+      if (under) low++;
+      return {
+        name, val: fmt(x, dec), ref: (isLimit ? '≤' : '') + fmt(ref, 0) + ' ' + unit,
+        pct: Math.min(100, Math.round(r * 100)) + '%',
+        bar: over ? '#9A3412' : isLimit ? '#B5ABA0' : (under ? '#C98A5A' : '#22A06B'),
+        color: over || under ? '#9A3412' : '#4A433C'
+      };
+    };
+    const groups = [
+      { title: 'Limits', rows: limits.map(mk(true)) },
+      { title: 'Vitamins & minerals', rows: micros.map(mk(false)) }
+    ];
+    const parts = [];
+    if (low) parts.push(low + ' low');
+    if (high) parts.push(high + ' over limit');
+    return {
+      open, expanded: open ? 'true' : 'false', chevron: open ? '180deg' : '0deg',
+      toggle: () => this.setState({ open: !open }),
+      scopeLabel: data.scope, coverage: data.cov, groups,
+      summary: parts.length ? parts.join(' · ') : (v === 'today' ? 'on track so far' : 'all fine'),
+      summaryColor: parts.length ? '#9A3412' : '#776E65',
+      frameBg: framed ? '#FFFFFF' : 'transparent',
+      frameBorder: framed ? '1px solid #EFE9E1' : 'none',
+      framePad: framed ? '2px 14px' : '0',
+      topRule: framed ? 'none' : '1px solid #F2EDE6'
+    };
+  }
+}
+</script>
+</body>
+</html>

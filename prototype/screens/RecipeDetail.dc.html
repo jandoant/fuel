@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recipe details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden">
+<div style="padding: 12px 18px 8px; display: flex; align-items: center; gap: 8px">
+<a href="Recipes.dc.html" aria-label="Back to recipes" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; color: #1E1B18">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<span style="width: 34px; height: 34px; border-radius: 9px; background: #F1EBFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7048C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Recipe"><path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 3v3M15 3v3M12 2v4"/></svg></span>
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<h1 style="margin: 0; font-size: 19px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Lentil coconut curry</h1>
+<span style="font-size: 12px; color: #776E65">Main · 5 ingredients</span>
+</div>
+<button aria-label="Favorite" style="width: 44px; height: 44px; border: none; background: transparent; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="#C98A1B" stroke="#C98A1B" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></button>
+</div>
+
+<div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 0 18px 14px; display: flex; flex-direction: column; gap: 10px">
+<section style="background: #FAF7FE; border: 1px solid #E5DAF8; border-radius: 18px; padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7048C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+<span style="font-size: 12px; color: #3D2F5C; line-height: 1.45"><span style="font-weight: 700">This is a template.</span> Planning it creates an independent copy. Changes here only apply to future plans; the <span style="font-family: 'Manrope', sans-serif">2</span> entries already planned keep their own amounts.</span>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 12px 14px 2px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">With default amounts</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 700">{{pp.kcal}}<span style="font-size: 13px; color: #776E65; font-weight: 600"> kcal</span></span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ppMacros}}" as="m" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 11px; font-weight: 700; color: {{m.color}}">{{m.name}}</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700">{{m.val}} g</span>
+<span style="height: 4px; border-radius: 2px; background: {{m.color}}; width: {{m.share}}"></span>
+</div>
+</sc-for>
+</div>
+<span style="font-size: 11px; color: #857C73">Bars: share of calories · fiber: share of 30 g goal</span>
+<dc-import name="Micros" variant="day" framed="{{ false }}" hint-size="100%,40px"></dc-import>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">Ingredients <span style="font-weight: 400; color: #776E65; font-size: 13px">default amounts</span></h2>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 0 12px; display: flex; flex-direction: column">
+<sc-for list="{{ingredients}}" as="ing" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px 0; border-top: {{ing.rule}}">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+<span style="display: flex; align-items: center; gap: 6px; min-width: 0"><span style="width: 18px; height: 18px; border-radius: 5px; background: #F2EDE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#857C73" stroke-width="3" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg></span><span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ing.name}}</span></span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 11px; display: flex; gap: 5px; flex-shrink: 0"><span>{{ing.kcal}}</span><span style="color: #4F46E5">P {{ing.p}}</span><span style="color: #EA6A2A">F {{ing.f}}</span><span style="color: #22A06B">C {{ing.c}}</span><span style="color: #A27B2C">Fib {{ing.fib}}</span></span>
+</div>
+<div style="display: flex; align-items: center; gap: 8px">
+<div style="display: flex; align-items: center; border: 1px solid #DED6CB; border-radius: 8px; overflow: hidden; background: #FFFFFF; flex-shrink: 0">
+<button onClick="{{ing.dec}}" aria-label="Less {{ing.name}}" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">−</button>
+<input type="text" inputmode="decimal" value="{{ing.amount}}" onChange="{{ing.set}}" onBlur="{{ing.blur}}" aria-label="Amount of {{ing.name}}" style="width: 48px; height: 32px; border: none; border-left: 1px solid #EFE9E1; border-right: 1px solid #EFE9E1; text-align: center; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: #1E1B18; background: #FFFFFF; padding: 0; outline-offset: -2px">
+<button onClick="{{ing.inc}}" aria-label="More {{ing.name}}" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">+</button>
+</div>
+<span style="font-size: 13px; color: #4A433C">{{ing.unit}}</span>
+<span style="flex-grow: 1"></span>
+<button aria-label="Remove {{ing.name}}" style="width: 40px; height: 40px; border: none; background: transparent; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5ABA0" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+</div>
+</sc-for>
+<a href="AddFood.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; border-top: 1px solid #F2EDE6; font-size: 13px; font-weight: 700; color: #7048C7">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7048C7" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add ingredient</span></a>
+</div>
+</section>
+</div>
+
+<div style="padding: 10px 18px 16px; background: #FFFFFF; border-top: 1px solid #EFE9E1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<a href="Plan.dc.html" style="height: 48px; border-radius: 16px; border: 1px solid #DED6CB; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #1E1B18">Plan…</a>
+<a href="Main.dc.html" style="height: 48px; border-radius: 16px; background: #22A06B; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #FFFFFF">Add to today</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = {}; }
+  renderVals() {
+    const s = this.state;
+    const defs = [
+      ['Red lentils, dry', 'g', 10, 80, [340, 24, 1.5, 50, 11], 2.6],
+      ['Coconut milk', 'ml', 10, 100, [200, 2, 21, 3, 0], 1],
+      ['Chopped tomatoes', 'g', 25, 100, [20, 1, 0.1, 3.5, 1], 1],
+      ['Spinach', 'g', 10, 60, [23, 2.9, 0.4, 3.6, 2.2], 1],
+      ['Onion', 'g', 10, 55, [40, 1.1, 0.1, 9, 1.7], 1]
+    ];
+    const tot = [0, 0, 0, 0, 0];
+    let grams = 0;
+    const ingredients = defs.map(([name, unit, step, a0, nut, cook], i) => {
+      const amt = s['a' + i] ?? a0;
+      const v = nut.map((x) => x * amt / 100);
+      v.forEach((x, j) => { tot[j] += x; });
+      grams += amt * cook;
+      return {
+        name, unit, amount: s['t' + i] ?? String(amt),
+        set: (e) => { const t = e.target.value; const v = parseFloat(t.replace(',', '.')); this.setState({ ['t' + i]: t, ...(isNaN(v) ? {} : { ['a' + i]: v }) }); },
+        blur: () => this.setState({ ['t' + i]: undefined }), rule: i === 0 ? 'none' : '1px solid #F2EDE6',
+        kcal: Math.round(v[0]), p: Math.round(v[1]), f: Math.round(v[2]), c: Math.round(v[3]), fib: Math.round(v[4]),
+        dec: () => amt - step > 0 && this.setState({ ['a' + i]: amt - step, ['t' + i]: undefined }),
+        inc: () => this.setState({ ['a' + i]: amt + step, ['t' + i]: undefined })
+      };
+    });
+    const n = 1;
+    const pp = tot.map((x) => x / n);
+    const kc = [pp[1] * 4, pp[2] * 9, pp[3] * 4];
+    const ksum = kc[0] + kc[1] + kc[2] || 1;
+    return {
+      ingredients,
+      pp: { kcal: Math.round(pp[0]) },
+      ppMacros: [
+        { name: 'Protein', val: Math.round(pp[1]), color: '#4F46E5', share: Math.round(kc[0] / ksum * 100) + '%' },
+        { name: 'Fat', val: Math.round(pp[2]), color: '#EA6A2A', share: Math.round(kc[1] / ksum * 100) + '%' },
+        { name: 'Carbs', val: Math.round(pp[3]), color: '#22A06B', share: Math.round(kc[2] / ksum * 100) + '%' },
+        { name: 'Fiber', val: Math.round(pp[4]), color: '#A27B2C', share: Math.min(100, Math.round(pp[4] / 30 * 100)) + '%' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

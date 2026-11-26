@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Add food</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="padding: 14px 18px 10px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="Main.dc.html" aria-label="Back to Today" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; color: #1E1B18">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<h1 style="margin: 0; font-size: 20px; font-weight: 700; flex-grow: 1">Add food</h1>
+</div>
+
+<div style="position: relative; height: 236px; border-radius: 22px; background: #2A2622; overflow: hidden; display: flex; align-items: center; justify-content: center">
+<div style="width: 240px; height: 120px; border: 2px solid #FFFFFF; border-radius: 16px; position: relative; display: flex; align-items: center">
+<div style="height: 2px; width: 100%; background: #7FD8A9"></div>
+</div>
+<div style="position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 13px; color: #E8E2DA">Point the camera at a barcode</div>
+<button aria-label="Toggle flashlight" style="position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 22px; border: none; background: #4A443E; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-2 6v12H9V9z"/></svg></button>
+</div>
+
+<label style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #DED6CB; border-radius: 16px; padding: 0 12px; height: 48px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#776E65" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search food</span>
+<input type="search" placeholder="Search Open Food Facts or your foods" style="border: none; outline: none; font: inherit; font-size: 15px; flex-grow: 1; background: transparent; color: #1E1B18">
+</label>
+
+<div role="tablist" aria-label="Food lists" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #EFE9E1; border-radius: 16px; padding: 3px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="border: none; font: inherit; font-size: 13px; font-weight: {{t.weight}}; min-height: 40px; border-radius: 9px; background: {{t.bg}}; color: #1E1B18">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="flex-grow: 1; overflow: hidden; padding: 0 18px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{foods}}" as="f" hint-placeholder-count="5">
+<div style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 16px; display: flex; align-items: center">
+<a href="Portion.dc.html" style="flex-grow: 1; min-width: 0; padding: 9px 4px 9px 10px; color: #1E1B18; display: flex; align-items: center; gap: 10px">
+<sc-if value="{{f.isRecipe}}" hint-placeholder-val="{{ false }}"><span title="Recipe" style="width: 30px; height: 30px; border-radius: 7px; background: #F1EBFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7048C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Recipe"><path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 3v3M15 3v3M12 2v4"/></svg></span></sc-if><sc-if value="{{f.isSingle}}" hint-placeholder-val="{{ true }}"><span style="width: 30px; height: 30px; border-radius: 7px; background: #F2EDE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#857C73" stroke-width="2" stroke-linecap="round" aria-label="Single food" role="img"><circle cx="12" cy="12" r="8"/></svg></span></sc-if><span style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+<span style="display: flex; align-items: baseline; gap: 6px; min-width: 0"><span style="font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.name}}</span><sc-if value="{{f.isRecipe}}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; font-weight: 700; color: #7048C7; white-space: nowrap; flex-shrink: 0">Recipe · {{f.ingredients}}</span></sc-if></span>
+<span style="font-size: 12px; color: #776E65; white-space: nowrap">{{f.meta}}<span style="font-family: 'Manrope', sans-serif; display: inline-flex; gap: 6px; margin-left: 6px"><span style="color: #4F46E5">P {{f.p}}</span><span style="color: #EA6A2A">F {{f.f}}</span><span style="color: #22A06B">C {{f.c}}</span></span></span>
+</span>
+</a>
+<span style="font-family: 'Manrope', sans-serif; font-size: 13px; color: #1E1B18; white-space: nowrap">{{f.kcal}}</span>
+<button onClick="{{f.open}}" aria-label="Add {{f.name}}" style="width: 44px; height: 44px; margin: 0 4px; border: none; background: transparent; display: flex; align-items: center; justify-content: center">
+<span style="width: 28px; height: 28px; border-radius: 18px; background: #E6F5EC; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#177A50" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span></button>
+</div>
+</sc-for>
+<a href="Portion.dc.html" style="font-size: 13px; font-weight: 600; padding: 10px 2px; min-height: 44px; box-sizing: border-box">Not found? Create a product or recipe</a>
+</div>
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; z-index: 10">
+<button onClick="{{close}}" aria-label="Close" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+<div role="dialog" aria-label="Add {{sh.name}}" style="background: #FFFFFF; border-radius: 20px 20px 0 0; padding: 10px 18px 18px; display: flex; flex-direction: column; gap: 12px">
+<span style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: #DED6CB"></span>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 17px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{sh.name}}</span>
+<span style="font-size: 12px; color: #776E65">Adding to <span style="font-weight: 700; color: #1E1B18">Dinner · today</span></span>
+</div>
+<span style="font-family: 'Manrope', sans-serif; font-size: 11px; display: flex; gap: 5px; flex-shrink: 0; padding-top: 4px"><span style="font-weight: 700">{{sh.kcal}} kcal</span><span style="color: #4F46E5">P {{sh.p}}</span><span style="color: #EA6A2A">F {{sh.f}}</span><span style="color: #22A06B">C {{sh.c}}</span><span style="color: #A27B2C">Fib {{sh.fib}}</span></span>
+</div>
+<sc-if value="{{sh.isSingle}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; gap: 8px">
+<div style="display: flex; align-items: center; border: 1px solid #DED6CB; border-radius: 8px; overflow: hidden; background: #FFFFFF; flex-shrink: 0">
+<button onClick="{{sh.dec}}" aria-label="Less" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">−</button>
+<input type="text" inputmode="decimal" value="{{sh.amount}}" onChange="{{sh.set}}" onBlur="{{sh.blur}}" aria-label="Amount" style="width: 48px; height: 32px; border: none; border-left: 1px solid #EFE9E1; border-right: 1px solid #EFE9E1; text-align: center; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: #1E1B18; background: #FFFFFF; padding: 0; outline-offset: -2px">
+<button onClick="{{sh.inc}}" aria-label="More" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">+</button>
+</div>
+<select aria-label="Serving size" value="{{sh.unitIdx}}" onChange="{{sh.setUnit}}" style="flex-grow: 1; min-width: 0; height: 34px; border: 1px solid #DED6CB; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1E1B18; padding: 0 6px">
+<sc-for list="{{sh.units}}" as="u" hint-placeholder-count="2"><option value="{{u.idx}}">{{u.label}}</option></sc-for>
+</select>
+<span style="font-family: 'Manrope', sans-serif; font-size: 11px; color: #776E65; min-width: 44px; text-align: right">{{sh.grams}}</span>
+</div>
+</sc-if>
+<sc-if value="{{sh.isRecipe}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; background: #FAF7FE; border: 1px solid #ECE4FA; border-radius: 16px; padding: 4px 12px; max-height: 300px; overflow-y: auto">
+<span style="font-size: 11px; color: #7048C7; padding: 6px 0 2px; line-height: 1.4"><span style="font-weight: 700">Adjust for this entry.</span> The recipe template stays unchanged.</span>
+<sc-for list="{{sh.parts}}" as="pt" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-top: 1px solid #ECE4FA">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{pt.name}}</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 11px; display: flex; gap: 5px; flex-shrink: 0"><span>{{pt.kcal}}</span><span style="color: #4F46E5">P {{pt.p}}</span><span style="color: #EA6A2A">F {{pt.f}}</span><span style="color: #22A06B">C {{pt.c}}</span><span style="color: #A27B2C">Fib {{pt.fib}}</span></span>
+</div>
+<div style="display: flex; align-items: center; gap: 8px">
+<div style="display: flex; align-items: center; border: 1px solid #DED6CB; border-radius: 8px; overflow: hidden; background: #FFFFFF; flex-shrink: 0">
+<button onClick="{{pt.dec}}" aria-label="Less {{pt.name}}" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">−</button>
+<input type="text" inputmode="decimal" value="{{pt.amount}}" onChange="{{pt.set}}" onBlur="{{pt.blur}}" aria-label="Amount of {{pt.name}}" style="width: 48px; height: 32px; border: none; border-left: 1px solid #EFE9E1; border-right: 1px solid #EFE9E1; text-align: center; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: #1E1B18; background: #FFFFFF; padding: 0; outline-offset: -2px">
+<button onClick="{{pt.inc}}" aria-label="More {{pt.name}}" style="width: 30px; height: 32px; border: none; background: #F6F3EE; font: inherit; font-size: 16px; line-height: 1; color: #1E1B18; padding: 0">+</button>
+</div>
+<select aria-label="Serving size for {{pt.name}}" value="{{pt.unitIdx}}" onChange="{{pt.setUnit}}" style="flex-grow: 1; min-width: 0; height: 34px; border: 1px solid #DED6CB; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 13px; color: #1E1B18; padding: 0 6px">
+<sc-for list="{{pt.units}}" as="u" hint-placeholder-count="2"><option value="{{u.idx}}">{{u.label}}</option></sc-for>
+</select>
+<span style="font-family: 'Manrope', sans-serif; font-size: 11px; color: #776E65; min-width: 44px; text-align: right">{{pt.grams}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 7px; background: #F6F3EE; border-radius: 16px; padding: 10px 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; font-weight: 700">Effect on today's plan</span>
+<span style="display: flex; gap: 8px; font-size: 10px; color: #776E65"><span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 6px; border-radius: 2px; background: #D6CEC4"></span>planned</span><span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 6px; border-radius: 2px; background: #1E1B18"></span>this food</span></span>
+</div>
+<sc-for list="{{effects}}" as="ef" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 50px 1fr 132px; align-items: center; column-gap: 8px">
+<span style="font-size: 11px; font-weight: 700; color: {{ef.color}}">{{ef.name}}</span>
+<div style="position: relative; height: 8px; background: #EFE9E1; border-radius: 4px; overflow: hidden">
+<div style="position: absolute; top: 0; bottom: 0; left: 0; width: {{ef.planW}}; background: {{ef.band}}"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: {{ef.planW}}; width: {{ef.addW}}; background: {{ef.color}}"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: {{ef.zoneL}}; width: {{ef.zoneW}}; background: repeating-linear-gradient(135deg, rgba(255,255,255,0.95) 0 1.5px, rgba(23,25,27,0.10) 1.5px 5px)"></div>
+</div>
+<span style="font-size: 11px; text-align: right; white-space: nowrap"><span style="font-family: 'Manrope', sans-serif; color: #776E65">{{ef.before}}→</span><span style="font-family: 'Manrope', sans-serif; font-weight: 700">{{ef.after}}</span> <span style="font-weight: 700; color: {{ef.statusColor}}">{{ef.status}}</span></span>
+</div>
+</sc-for>
+</div>
+<button onClick="{{close}}" style="height: 50px; border-radius: 18px; border: none; background: #22A06B; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 700">{{sh.addLabel}}</button>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tab: 'recent' }; }
+  renderVals() {
+    const tab = this.state.tab;
+    const defs = [['recent', 'Recent'], ['favorites', 'Favorites'], ['mine', 'My foods']];
+    const lists = {
+      recent: [
+        { name: 'Skyr natur (Milbona)', isRecipe: false, isSingle: true, ingredients: '', meta: '150 g', p: 17, f: 0, c: 6, kcal: '95 kcal' },
+        { name: 'Haferflocken kernig', isRecipe: false, isSingle: true, ingredients: '', meta: '60 g', p: 8, f: 4, c: 35, kcal: '224 kcal' },
+        { name: 'Banana', isRecipe: false, isSingle: true, ingredients: '', meta: '1 medium', p: 1, f: 0, c: 25, kcal: '107 kcal' },
+        { name: 'Chicken breast, cooked', isRecipe: false, isSingle: true, ingredients: '', meta: '200 g', p: 62, f: 7, c: 0, kcal: '330 kcal' },
+        { name: 'Vollkorn-Wrap', isRecipe: false, isSingle: true, ingredients: '', meta: '1 piece', p: 6, f: 4, c: 32, kcal: '190 kcal' }
+      ],
+      favorites: [
+        { name: 'Protein shake', isRecipe: true, isSingle: false, ingredients: '3 ingr.', meta: '1 serving', p: 35, f: 4, c: 14, kcal: '240 kcal' },
+        { name: 'Skyr natur (Milbona)', isRecipe: false, isSingle: true, ingredients: '', meta: '150 g', p: 17, f: 0, c: 6, kcal: '95 kcal' },
+        { name: 'Overnight oats', isRecipe: true, isSingle: false, ingredients: '5 ingr.', meta: '1 jar', p: 18, f: 13, c: 52, kcal: '410 kcal' }
+      ],
+      mine: [
+        { name: 'Overnight oats', isRecipe: true, isSingle: false, ingredients: '5 ingr.', meta: '1 jar', p: 18, f: 13, c: 52, kcal: '410 kcal' },
+        { name: 'Protein shake', isRecipe: true, isSingle: false, ingredients: '3 ingr.', meta: '1 serving', p: 35, f: 4, c: 14, kcal: '240 kcal' },
+        { name: 'Bäcker Brötchen', isRecipe: false, isSingle: true, ingredients: '', meta: '1 piece', p: 5, f: 1, c: 29, kcal: '150 kcal' }
+      ]
+    };
+    const NUT = {
+      'Skyr natur (Milbona)': [[63, 11, 0.2, 4, 0], 100, [['cup (150 g)', 150, 0.5, 0.5, 4], ['g', 1, 10, 10, 1000], ['tub (500 g)', 500, 0.25, 0.25, 2]], 0, 1],
+      'Haferflocken kernig': [[372, 13.5, 7, 58.7, 10], 100, [['g', 1, 10], ['tbsp (10 g)', 10, 1]], 0, 60],
+      'Banana': [[89, 1.1, 0.3, 22.8, 2.6], 100, [['medium (120 g)', 120, 0.5], ['g', 1, 10]], 0, 1],
+      'Chicken breast, cooked': [[165, 31, 3.6, 0, 0], 100, [['g', 1, 10], ['fillet (150 g)', 150, 0.5]], 0, 200],
+      'Vollkorn-Wrap': [[300, 9.5, 6, 49, 6], 100, [['piece (64 g)', 64, 1], ['g', 1, 8]], 0, 1],
+      'Bäcker Brötchen': [[150, 5, 1, 29, 1.5], 1, [['piece', 1, 1]], 0, 1]
+    };
+    const ING = {
+      whey: ['Whey protein', [380, 78, 6, 8, 0], [['scoop (30 g)', 30, 0.5], ['g', 1, 5]]],
+      milk: ['Milk 1.5 %', [47, 3.4, 1.5, 4.8, 0], [['ml', 1, 25], ['glass (200 ml)', 200, 0.5]]],
+      cocoa: ['Cocoa powder', [230, 20, 14, 10, 33], [['tsp (5 g)', 5, 1], ['g', 1, 1]]],
+      skyr: ['Skyr natur', [63, 11, 0.2, 4, 0], [['g', 1, 10, 10, 1000], ['cup (150 g)', 150, 0.5, 0.5, 4], ['tub (500 g)', 500, 0.25, 0.25, 2]]],
+      oats: ['Haferflocken kernig', [372, 13.5, 7, 58.7, 10], [['g', 1, 10], ['tbsp (10 g)', 10, 1]]],
+      walnut: ['Walnuts', [654, 15, 65, 14, 6.7], [['g', 1, 5], ['handful (25 g)', 25, 0.5]]],
+      honey: ['Honey', [304, 0.3, 0, 82, 0], [['tsp (7 g)', 7, 1], ['g', 1, 5]]]
+    };
+    const RECIPES = {
+      'Protein shake': [['whey', 0, 1], ['milk', 0, 250], ['cocoa', 0, 1]],
+      'Overnight oats': [['skyr', 0, 150], ['oats', 0, 60], ['milk', 0, 100], ['walnut', 0, 10], ['honey', 0, 1.5]]
+    };
+    const sh0 = this.state.sheet;
+    let sh = { name: '', units: [] }, effects = [];
+    if (sh0 && RECIPES[sh0]) {
+      const tot = [0, 0, 0, 0, 0];
+      const num = (x) => String(Math.round(x * 100) / 100);
+      const parts = RECIPES[sh0].map(([key, u0, a0], k) => {
+        const [iname, nut, units] = ING[key];
+        const ui = this.state['ru_' + k] ?? u0;
+        const unit = units[ui];
+        const amt = this.state['ra_' + k] ?? (ui === u0 ? a0 : 1);
+        const q = amt * unit[1];
+        const v = nut.map((x) => x * q / 100);
+        v.forEach((x, j) => { tot[j] += x; });
+        const plain = unit[0] === 'g' || unit[0] === 'ml';
+        const umin = unit[3] ?? unit[2], umax = unit[4] ?? Infinity;
+        return {
+          name: iname, kcal: Math.round(v[0]), p: Math.round(v[1]), f: Math.round(v[2]), c: Math.round(v[3]), fib: Math.round(v[4]),
+          amount: this.state['t_r' + k] ?? (plain ? String(Math.round(amt)) : num(amt)),
+          set: (e) => { const t = e.target.value; const v = parseFloat(t.replace(',', '.')); this.setState({ ['t_r' + k]: t, ...(isNaN(v) || v < umin || v > umax ? {} : { ['ra_' + k]: v }) }); },
+          blur: () => this.setState({ ['t_r' + k]: undefined }),
+          grams: plain ? '' : '= ' + Math.round(q) + (unit[0].indexOf('ml') >= 0 ? ' ml' : ' g'),
+          units: units.map((u, j) => ({ idx: String(j), label: u[0] })), unitIdx: String(ui),
+          setUnit: (e) => { const j = Number(e.target.value); const nu = units[j]; this.setState({ ['ru_' + k]: j, ['ra_' + k]: Math.min(nu[4] ?? Infinity, Math.max(nu[3] ?? nu[2], Math.round(q / nu[1] / nu[2]) * nu[2])) }); },
+          dec: () => amt - unit[2] >= umin - 1e-9 && this.setState({ ['ra_' + k]: Math.round((amt - unit[2]) * 100) / 100, ['t_r' + k]: undefined }),
+          inc: () => amt + unit[2] <= umax + 1e-9 && this.setState({ ['ra_' + k]: Math.round((amt + unit[2]) * 100) / 100, ['t_r' + k]: undefined })
+        };
+      });
+      sh = { name: sh0, isRecipe: true, isSingle: false, parts, units: [], addLabel: 'Add recipe · ' + Math.round(tot[0]) + ' kcal',
+        kcal: Math.round(tot[0]), p: Math.round(tot[1]), f: Math.round(tot[2]), c: Math.round(tot[3]), fib: Math.round(tot[4]), _v: tot };
+    } else if (sh0) {
+      const [nut, base, units, u0, a0] = NUT[sh0];
+      const ui = this.state.su ?? u0;
+      const unit = units[ui];
+      const amt = this.state.sa ?? (ui === u0 ? a0 : 1);
+      const q = amt * unit[1];
+      const v = nut.map((x) => x * q / base);
+      const plain = unit[0] === 'g';
+      const umin = unit[3] ?? unit[2], umax = unit[4] ?? Infinity;
+      const num = (x) => String(Math.round(x * 100) / 100);
+      sh = {
+        name: sh0, isRecipe: false, isSingle: true, _v: v, kcal: Math.round(v[0]), p: Math.round(v[1]), f: Math.round(v[2]), c: Math.round(v[3]), fib: Math.round(v[4]),
+        amount: this.state.t_s ?? (plain ? String(Math.round(amt)) : num(amt)),
+        set: (e) => { const t = e.target.value; const v = parseFloat(t.replace(',', '.')); this.setState({ t_s: t, ...(isNaN(v) || v < umin || v > umax ? {} : { sa: v }) }); },
+        blur: () => this.setState({ t_s: undefined }),
+        grams: base === 100 && !plain ? '= ' + Math.round(q) + ' g' : '',
+        addLabel: 'Add ' + (plain ? Math.round(amt) + ' g' : num(amt) + ' × ' + unit[0].split(' (')[0]),
+        units: units.map((u, k) => ({ idx: String(k), label: u[0] })), unitIdx: String(ui),
+        setUnit: (e) => { const k = Number(e.target.value); const nu = units[k]; this.setState({ su: k, sa: Math.min(nu[4] ?? Infinity, Math.max(nu[3] ?? nu[2], Math.round(q / nu[1] / nu[2]) * nu[2])) }); },
+        dec: () => amt - unit[2] >= umin - 1e-9 && this.setState({ sa: Math.round((amt - unit[2]) * 100) / 100, t_s: undefined }),
+        inc: () => amt + unit[2] <= umax + 1e-9 && this.setState({ sa: Math.round((amt + unit[2]) * 100) / 100, t_s: undefined })
+      };
+    }
+    if (sh0) {
+      const plan = [2355, 158, 55, 305, 39];
+      const after = plan.map((x, i) => x + sh._v[i]);
+      const zones = [[2340, 2550], [141, 157], [39, 63], null, [30, null]];
+      const cz = (pp, ff) => [Math.round((2340 - pp * 4 - ff * 9) / 4), Math.round((2550 - pp * 4 - ff * 9) / 4)];
+      zones[3] = cz(after[1], after[2]);
+      const meta = [['kcal', '#1E1B18', '#D6CEC4', ''], ['Protein', '#4F46E5', '#C7C9F7', ' g'], ['Fat', '#EA6A2A', '#F8CDB4', ' g'], ['Carbs', '#22A06B', '#B9E5CD', ' g'], ['Fiber', '#A27B2C', '#E9D7AE', ' g']];
+      effects = meta.map(([name, color, band, u], i) => {
+        const [lo, hi] = zones[i];
+        const max = (hi === null ? lo * 1.6 : hi * 1.3);
+        const pc = (x) => Math.min(100, x / max * 100);
+        const a = Math.round(after[i]);
+        const st = a < lo ? (lo - a) + u + ' short' : (hi !== null && a > hi) ? (a - hi) + u + ' over' : 'fits';
+        return {
+          name, color: name === 'kcal' ? '#1E1B18' : color, band,
+          planW: pc(plan[i]).toFixed(1) + '%', addW: Math.max(0, pc(after[i]) - pc(plan[i])).toFixed(1) + '%',
+          zoneL: pc(lo).toFixed(1) + '%', zoneW: ((hi === null ? 100 : pc(hi)) - pc(lo)).toFixed(1) + '%',
+          before: Math.round(plan[i]).toLocaleString('en-US'), after: a.toLocaleString('en-US'),
+          status: st, statusColor: st === 'fits' ? '#136A45' : '#9A3412'
+        };
+      });
+    }
+    return {
+      sheetOpen: !!sh0, sh, effects, close: () => this.setState({ sheet: null }),
+      tabs: defs.map(([id, label]) => ({
+        label, selected: id === tab ? 'true' : 'false',
+        bg: id === tab ? '#FFFFFF' : 'transparent',
+        weight: id === tab ? '600' : '500',
+        pick: () => this.setState({ tab: id })
+      })),
+      foods: lists[tab].map((f) => ({ ...f, open: () => this.setState({ sheet: f.name, su: undefined, sa: undefined, ru_0: undefined, ru_1: undefined, ru_2: undefined, ru_3: undefined, ru_4: undefined, ra_0: undefined, ra_1: undefined, ra_2: undefined, ra_3: undefined, ra_4: undefined }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

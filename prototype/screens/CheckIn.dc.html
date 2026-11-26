@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Weekly check-in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="Energy.dc.html" aria-label="Back to Energy" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; color: #1E1B18">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<div style="display: flex; flex-direction: column">
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Week 48 check-in</h1>
+<span style="font-size: 12px; color: #776E65">19 – 25 Nov · 7/7 days logged · 7/7 weigh-ins</span>
+</div>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">1 · Goal reached?</h2>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #E6F5EC; color: #136A45">On track</span>
+</div>
+<div style="font-size: 13px">Actual <span style="font-family: 'Manrope', sans-serif; font-weight: 700">−0.31 %/wk</span> <span style="color: #776E65">(−0.24 kg) · goal −0.25 to −0.5</span></div>
+<div style="font-size: 12px; color: #776E65">At this rate: 75.0 kg around early March</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">2 · Plan or execution?</h2>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #E6F5EC; color: #136A45">Ate on target</span>
+</div>
+<sc-for list="{{nutrients}}" as="n" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 124px 166px 1fr; align-items: center; column-gap: 4px; min-height: 30px">
+<span style="display: flex; flex-direction: column; gap: 1px; line-height: 1.2">
+<span style="font-size: 12px; white-space: nowrap">{{n.name}} <span style="font-family: 'Manrope', sans-serif; font-weight: 700">{{n.actual}}</span></span>
+<span style="display: flex; align-items: center; gap: 4px; font-family: 'Manrope', sans-serif; font-size: 11px; color: #776E65; white-space: nowrap">
+<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#776E65" stroke-width="2.5" aria-label="Planned"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>{{n.plan}}</span>
+</span>
+<svg width="166" height="22" viewBox="0 0 166 24" role="img" aria-label="{{n.aria}}">
+<rect x="0" y="11" width="166" height="2" fill="#F2EDE6"/>
+<line x1="{{x100}}" y1="3" x2="{{x100}}" y2="21" stroke="#DED6CB" stroke-dasharray="2 2"/>
+<rect x="{{n.bandX}}" y="5" width="{{n.bandW}}" height="14" rx="4" fill="{{n.band}}"/>
+<sc-for list="{{n.dots}}" as="d" hint-placeholder-count="7">
+<circle cx="{{d.x}}" cy="{{d.y}}" r="3" fill="{{d.fill}}" stroke="#FFFFFF" stroke-width="1"/>
+</sc-for>
+<rect x="{{n.planX}}" y="3" width="4" height="18" rx="2" fill="#FFFFFF" stroke="#776E65" stroke-width="1.5"/>
+<rect x="{{n.avgX}}" y="2" width="3" height="20" rx="1.5" fill="#1E1B18"/>
+</svg>
+<span style="text-align: right; font-family: 'Manrope', sans-serif; font-size: 12px; color: {{n.daysColor}}">{{n.days}}</span>
+</div>
+</sc-for>
+<div style="display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px; font-size: 11px; color: #776E65">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #DCDDFB"></span>target</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 6px; height: 6px; border-radius: 3px; background: #4F46E5"></span>day</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 3px; height: 10px; border-radius: 1px; background: #1E1B18"></span>actual avg</span><span style="display: flex; align-items: center; gap: 4px"><span style="width: 3px; height: 9px; border-radius: 1px; border: 1.5px solid #776E65"></span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#776E65" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>plan avg</span>
+</div>
+<div style="font-size: 12px; color: #9A3412">Fiber below 30 g on 5 of 7 days · lowest on wrap days</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 14px; font-weight: 700">3 · Forecast vs outcome</h2><span style="font-size: 12px; color: #776E65">4 of 6 within ±0.1 kg</span></div>
+<div style="font-size: 13px">Forecast <span style="font-family: 'Manrope', sans-serif; font-weight: 700">−0.30 kg</span> · actual <span style="font-family: 'Manrope', sans-serif; font-weight: 700">−0.24 kg</span></div>
+<div style="display: flex; align-items: center; gap: 6px">
+<sc-for list="{{hits}}" as="h" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+<span style="width: 34px; height: 22px; border-radius: 6px; background: {{h.bg}}; color: {{h.fg}}; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{h.mark}}</span>
+<span style="font-size: 10px; color: #857C73">{{h.wk}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #22A06B; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">4 · What was adapted</h2>
+<div style="display: grid; grid-template-columns: 1fr auto; row-gap: 4px; font-size: 13px">
+<span style="color: #776E65">Maintenance</span><span style="font-family: 'Manrope', sans-serif"><span style="color: #776E65">2,810 →</span> <span style="font-weight: 700">2,770</span></span>
+<span style="color: #776E65">Daily target</span><span style="font-family: 'Manrope', sans-serif"><span style="color: #776E65">2,490 →</span> <span style="font-weight: 700">2,450</span></span>
+</div>
+<div style="font-size: 12px; color: #4A433C; line-height: 1.45">On target, but lost slower than forecast: 60 % of the ~65 kcal/day gap applied.</div>
+</section>
+
+
+<div style="font-size: 12px; color: #776E65; line-height: 1.45; padding: 0 2px">Composition (4 weeks, low confidence): fat mass tending down, lean mass steady.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const hit = { bg: '#E6F5EC', fg: '#136A45', mark: '✓' };
+    const miss = { bg: '#FBEBDD', fg: '#9A3412', mark: '✗' };
+    const ok = '#136A45', warn = '#9A3412';
+    const W = 166;
+    const x = (v, ref) => Math.max(2, Math.min(W - 2, ((v / ref) - 0.6) / 0.8 * W));
+    const ys = [8, 15, 10, 16, 9, 14, 12];
+    const mk = (name, unit, ref, lo, hi, vals, band, inCol, outCol, plan) => {
+      const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const isIn = (v) => lo === null ? true : v >= lo && (hi === null || v <= hi);
+      const nIn = vals.filter(isIn).length;
+      const bx = lo === null ? 0 : x(lo, ref);
+      const bw = lo === null ? 0 : (hi === null ? W - bx : x(hi, ref) - bx);
+      return {
+        name, avg: (unit === 'kcal' ? Math.round(avg / 10) * 10 : Math.round(avg)).toLocaleString('en-US') + (unit === 'kcal' ? '' : 'g'),
+        aria: name + ': 7 daily values against the target range, weekly average marked',
+        bandX: bx.toFixed(1), bandW: bw.toFixed(1), band,
+        dots: vals.map((v, i) => ({ x: x(v, ref).toFixed(1), y: ys[i], fill: inCol })),
+        avgX: (x(avg, ref) - 1.5).toFixed(1), planX: (x(plan, ref) - 2).toFixed(1),
+        plan: plan.toLocaleString('en-US') + ' ' + unit,
+        actual: (unit === 'kcal' ? Math.round(avg / 10) * 10 : Math.round(avg)).toLocaleString('en-US') + ' ' + unit,
+        days: nIn + '/7', daysColor: nIn >= 5 ? ok : warn
+      };
+    };
+    const vals = {
+      cal: [2410, 2550, 2480, 2590, 2450, 2700, 2380],
+      p: [145, 152, 156, 149, 150, 155, 150],
+      f: [52, 60, 55, 66, 58, 62, 53],
+      c: [340, 350, 330, 360, 345, 365, 325],
+      fib: [31, 24, 22, 33, 25, 27, 20]
+    };
+    return {
+      x100: x(1, 1).toFixed(1),
+      nutrients: [
+        mk('Calories', 'kcal', 2490, 2380, 2600, vals.cal, '#EFE9E1', '#857C73', '#EA6A2A', 2480),
+        mk('Protein', 'g', 149, 141, 157, vals.p, '#DCDDFB', '#4F46E5', '#EA6A2A', 152),
+        mk('Fat', 'g', 51, 39, 63, vals.f, '#FBE0D0', '#EA6A2A', '#EA6A2A', 57),
+        mk('Carbs', 'g', 359, 324, 394, vals.c, '#B9E5CD', '#22A06B', '#EA6A2A', 338),
+        mk('Fiber', 'g', 30, 30, null, vals.fib, '#E9D7AE', '#A27B2C', '#EA6A2A', 28)
+      ],
+      hits: [['W43', hit], ['W44', miss], ['W45', hit], ['W46', hit], ['W47', miss], ['W48', hit]]
+        .map(([wk, m]) => ({ wk, ...m })),
+
+    };
+  }
+}
+</script>
+</body>
+</html>

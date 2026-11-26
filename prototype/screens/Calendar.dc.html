@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Calendar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="flex-grow: 1; padding: 16px 18px 10px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{openMenu}}" aria-label="Open menu" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Calendar</h1>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<div role="tablist" aria-label="Calendar view" style="display: flex; background: #EFE9E1; border-radius: 10px; padding: 3px">
+<sc-for list="{{views}}" as="v" hint-placeholder-count="2">
+<button role="tab" aria-selected="{{v.selected}}" onClick="{{v.pick}}" style="border: none; font: inherit; font-size: 13px; font-weight: {{v.weight}}; padding: 0 14px; min-height: 34px; border-radius: 8px; background: {{v.bg}}; color: #1E1B18">{{v.label}}</button>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center">
+<button aria-label="Previous" style="width: 40px; height: 40px; border: none; background: transparent; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+<span style="font-size: 13px; font-weight: 700; min-width: 80px; text-align: center">{{periodLabel}}</span>
+<button aria-label="Next" style="width: 40px; height: 40px; border: none; background: transparent; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+</div>
+
+<sc-if value="{{isMonth}}" hint-placeholder-val="{{ true }}">
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 8px 8px 6px; display: flex; flex-direction: column; gap: 2px">
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); font-size: 11px; color: #776E65; text-align: center; padding-bottom: 2px">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 2px">
+<sc-for list="{{cells}}" as="c" hint-placeholder-count="42">
+<button onClick="{{c.pick}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" style="height: 36px; border-radius: 10px; border: {{c.border}}; background: {{c.bg}}; font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: {{c.fg}}">
+<span style="font-size: 13px; font-weight: {{c.weight}}">{{c.num}}</span>
+<span style="width: 6px; height: 6px; border-radius: 3px; background: {{c.dot}}; border: {{c.dotBorder}}; box-sizing: border-box"></span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: center; gap: 12px; font-size: 10px; color: #776E65; padding-top: 4px">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 6px; height: 6px; border-radius: 3px; background: #22A06B"></span>on target</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 6px; height: 6px; border-radius: 3px; background: #EA6A2A"></span>off target</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 6px; height: 6px; border-radius: 3px; border: 1.5px solid #857C73; box-sizing: border-box"></span>planned</span>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{isWeek}}" hint-placeholder-val="{{ false }}">
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 10px 8px 8px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 4px">
+<sc-for list="{{week}}" as="w" hint-placeholder-count="7">
+<button onClick="{{w.pick}}" aria-label="{{w.aria}}" aria-pressed="{{w.pressed}}" style="border: {{w.border}}; background: {{w.bg}}; border-radius: 10px; font: inherit; color: #1E1B18; padding: 6px 0 6px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="font-size: 11px; color: #776E65">{{w.dow}}</span>
+<span style="font-size: 14px; font-weight: {{w.weight}}">{{w.num}}</span>
+<svg width="22" height="90" viewBox="0 0 22 90" aria-hidden="true">
+<rect x="4" y="{{w.planY}}" width="14" height="{{w.planH}}" rx="3" fill="none" stroke="#B5ABA0" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="4" y="{{w.pY}}" width="14" height="{{w.pH}}" fill="#4F46E5"/>
+<rect x="4" y="{{w.cY}}" width="14" height="{{w.cH}}" fill="#22A06B"/>
+<rect x="4" y="{{w.fY}}" width="14" height="{{w.fH}}" fill="#EA6A2A"/>
+<line x1="0" y1="15.3" x2="22" y2="15.3" stroke="#1E1B18" stroke-width="1" stroke-dasharray="2 2"/>
+</svg>
+<span style="font-family: 'Manrope', sans-serif; font-size: 10px; color: {{w.kcalColor}}">{{w.kcal}}</span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 11px; color: #776E65; padding: 0 4px">
+<span>Avg <span style="font-family: 'Manrope', sans-serif; color: #1E1B18; font-weight: 700">2,510</span> kcal · 2/3 on target</span>
+<span style="display: flex; align-items: center; gap: 8px">
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #4F46E5"></span>P</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #EA6A2A"></span>F</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #22A06B"></span>C</span>
+<span style="display: flex; align-items: center; gap: 3px"><span style="width: 12px; border-top: 1px dashed #1E1B18"></span>target</span></span>
+</div>
+</section>
+</sc-if>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-height: 0; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">{{dayTitle}}</h2>
+<span style="font-size: 12px; color: #776E65"><span style="font-family: 'Manrope', sans-serif; color: #1E1B18; font-weight: 700">{{dayKcal}}</span> / {{dayTarget}} kcal · <span style="font-family: 'Manrope', sans-serif"><span style="color: #4F46E5">P {{dayP}}</span> <span style="color: #EA6A2A">F {{dayF}}</span> <span style="color: #22A06B">C {{dayC}}</span> <span style="color: #A27B2C">Fib {{dayFib}}</span></span></span>
+</div>
+<button onClick="{{copyDay}}" style="min-height: 36px; padding: 0 10px; border-radius: 9px; border: 1px solid #DED6CB; background: #FFFFFF; font: inherit; font-size: 12px; font-weight: 700; color: #136A45; white-space: nowrap">Copy day</button>
+</div>
+<sc-if value="{{hasData}}" hint-placeholder-val="{{ true }}">
+<dc-import name="Micros" variant="day" framed="{{ false }}" hint-size="100%,40px"></dc-import>
+</sc-if>
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 13px; color: #776E65; padding: 12px 0">Nothing logged on this day.</div>
+</sc-if>
+<sc-for list="{{meals}}" as="m" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px">
+<span style="font-size: 12px; font-weight: 700; color: #776E65; text-transform: uppercase; letter-spacing: 0.05em">{{m.name}} · <span style="font-family: 'Manrope', sans-serif">{{m.kcal}}</span></span>
+<button onClick="{{m.copy}}" style="min-height: 28px; padding: 0 6px; border: none; background: transparent; font: inherit; font-size: 12px; font-weight: 600; color: #177A50">Copy meal</button>
+</div>
+<sc-for list="{{m.items}}" as="it" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 8px; min-height: 36px; border-top: 1px solid #F2EDE6">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="display: flex; align-items: center; gap: 6px; min-width: 0"><sc-if value="{{it.isRecipe}}" hint-placeholder-val="{{ false }}"><span title="Recipe" style="width: 22px; height: 22px; border-radius: 7px; background: #F1EBFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7048C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Recipe"><path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 3v3M15 3v3M12 2v4"/></svg></span></sc-if><sc-if value="{{it.isSingle}}" hint-placeholder-val="{{ true }}"><span style="width: 22px; height: 22px; border-radius: 7px; background: #F2EDE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#857C73" stroke-width="2" stroke-linecap="round" aria-label="Single food" role="img"><circle cx="12" cy="12" r="8"/></svg></span></sc-if><span style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.name}}</span></span>
+<span style="font-size: 11px; color: #776E65; display: flex; gap: 8px; white-space: nowrap; overflow: hidden">{{it.amount}}
+<span style="font-family: 'Manrope', sans-serif; display: flex; gap: 6px"><span style="color: #4F46E5">P {{it.p}}</span><span style="color: #EA6A2A">F {{it.f}}</span><span style="color: #22A06B">C {{it.c}}</span><span style="color: #A27B2C">Fib {{it.fib}}</span></span></span>
+</div>
+<span style="font-family: 'Manrope', sans-serif; font-size: 12px">{{it.kcal}}</span>
+<button onClick="{{it.promote}}" aria-label="Add {{it.name}} to today" style="width: 64px; height: 36px; border: none; background: transparent; display: flex; align-items: center; justify-content: center">
+<span style="height: 26px; padding: 0 8px; border-radius: 13px; background: #E6F5EC; color: #136A45; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 2px; white-space: nowrap">+ Today</span></button>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</section>
+</div>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 18px; right: 18px; bottom: 24px; min-height: 44px; border-radius: 16px; background: #1E1B18; color: #FFFFFF; font-size: 13px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 14px; gap: 8px">
+<span style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{toast}}</span>
+<button onClick="{{undo}}" style="min-height: 36px; padding: 0 8px; border: none; background: transparent; font: inherit; font-size: 13px; font-weight: 700; color: #9EE3BF">Undo</button>
+</div>
+</sc-if>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; z-index: 10">
+<dc-import name="NavDrawer" active="Calendar" hint-size="300px,844px"></dc-import>
+<button onClick="{{closeMenu}}" aria-label="Close menu" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { menu: false, sel: 24, toast: '', view: 'week' }; }
+  renderVals() {
+    const s = this.state;
+    const TODAY = 26;
+    const dows = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const unlogged = [4, 15];
+    const off = [7, 14, 21, 24];
+    const days = [];
+    for (let i = 0; i < 42; i++) {
+      const d = i - 5;
+      days.push(d < 1 ? { num: 26 + i, month: 'Oct' } : d > 30 ? { num: d - 30, month: 'Dec' } : { num: d, month: 'Nov' });
+    }
+    const status = (day) => {
+      if (day.month !== 'Nov') return day.month === 'Oct' ? 'on' : 'none';
+      if (day.num > TODAY + 2) return 'none';
+      if (day.num > TODAY) return 'planned';
+      if (unlogged.indexOf(day.num) >= 0) return 'none';
+      return off.indexOf(day.num) >= 0 ? 'off' : 'on';
+    };
+    const cells = days.map((day, i) => {
+      const st = status(day);
+      const isSel = day.month === 'Nov' && day.num === s.sel;
+      const isToday = day.month === 'Nov' && day.num === TODAY;
+      return {
+        num: String(day.num),
+        aria: dows[i % 7] + ' ' + day.num + ' ' + day.month + (st === 'none' ? ', nothing logged' : st === 'planned' ? ', planned' : st === 'off' ? ', off target' : ', on target'),
+        pressed: isSel ? 'true' : 'false',
+        bg: isSel ? '#E6F5EC' : 'transparent',
+        border: isSel ? '1.5px solid #22A06B' : isToday ? '1.5px solid #1E1B18' : '1.5px solid transparent',
+        fg: day.month === 'Nov' ? '#1E1B18' : '#BDB3A8',
+        weight: isToday || isSel ? '600' : '400',
+        dot: st === 'on' ? '#22A06B' : st === 'off' ? '#EA6A2A' : 'transparent',
+        dotBorder: st === 'planned' ? '1.5px solid #857C73' : 'none',
+        pick: () => day.month === 'Nov' && this.setState({ sel: day.num })
+      };
+    });
+    const templates = [
+      { kcal: 2620, p: 158, c: 352, f: 66, fib: 41, meals: [
+        ['Breakfast', [['Overnight oats', '1 jar', 410, 18, 52, 13, 7]]],
+        ['Lunch', [['Lentil curry, rice', '450 g', 720, 28, 118, 14, 14], ['Apple', '1 medium', 80, 0, 19, 0, 4]]],
+        ['Dinner', [['Spaghetti bolognese', '1 large plate', 870, 42, 105, 28, 8], ['Parmesan', '15 g', 60, 5, 0, 4, 0]]],
+        ['Snacks', [['Skyr natur (Milbona)', '250 g', 160, 28, 10, 1, 0], ['Protein shake', '1 serving', 240, 35, 14, 4, 2]]]
+      ] },
+      { kcal: 2440, p: 151, c: 335, f: 58, fib: 25, meals: [
+        ['Breakfast', [['Skyr natur (Milbona)', '150 g', 95, 17, 6, 0, 0], ['Haferflocken kernig', '60 g', 224, 8, 35, 4, 6], ['Banana', '1 medium', 107, 1, 25, 0, 3]]],
+        ['Lunch', [['Chicken wrap', '1 piece', 610, 42, 62, 20, 6], ['Apple', '1 medium', 80, 0, 19, 0, 4]]],
+        ['Dinner', [['Salmon, potatoes, broccoli', '1 plate', 760, 45, 62, 34, 9]]],
+        ['Snacks', [['Protein shake', '1 serving', 240, 35, 14, 4, 2], ['Rice cakes', '4 pieces', 140, 3, 30, 1, 1]]]
+      ] }
+    ];
+    const REC = { 'Overnight oats': 5, 'Lentil curry, rice': 7, 'Spaghetti bolognese': 8, 'Protein shake': 3, 'Chicken wrap': 5, 'Salmon, potatoes, broccoli': 4 };
+    const st = status({ num: s.sel, month: 'Nov' });
+    const tpl = templates[s.sel % 2 === 0 ? 0 : 1];
+    const date = new Date(2026, 10, s.sel);
+    const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+    const title = dayName + ' ' + s.sel + ' Nov' + (s.sel === TODAY ? ' · today' : st === 'planned' ? ' · planned' : '');
+    const toast = (txt) => this.setState({ toast: txt });
+    const empty = st === 'none';
+    const weekData = [
+      [23, 'Mon', 2440, 0, 'on', [151, 335, 58]], [24, 'Tue', 2620, 0, 'off', [158, 352, 66]], [25, 'Wed', 2470, 0, 'on', [150, 340, 57]],
+      [26, 'Thu', 1210, 2430, 'today', [92, 140, 38]], [27, 'Fri', 0, 2430, 'planned', [0, 0, 0]], [28, 'Sat', 0, 1610, 'planned', [0, 0, 0]], [29, 'Sun', 0, 0, 'none', [0, 0, 0]]
+    ];
+    const yb = (k) => 90 - Math.min(k, 3000) / 3000 * 90;
+    const week = weekData.map(([num, dow, eaten, plan, kind, m]) => {
+      const isSel = num === s.sel;
+      const kc = [m[0] * 4, m[1] * 4, m[2] * 9];
+      const tot = kc[0] + kc[1] + kc[2] || 1;
+      const H = 90 - yb(eaten);
+      const hP = H * kc[0] / tot, hC = H * kc[1] / tot, hF = H * kc[2] / tot;
+      return {
+        num: String(num), dow, pressed: isSel ? 'true' : 'false',
+        aria: dow + ' ' + num + ' Nov, ' + (eaten ? eaten + ' kcal eaten' : '') + (plan ? (eaten ? ', ' : '') + plan + ' kcal planned' : (eaten ? '' : 'nothing logged')),
+        bg: isSel ? '#E6F5EC' : 'transparent',
+        border: isSel ? '1.5px solid #22A06B' : kind === 'today' ? '1.5px solid #1E1B18' : '1.5px solid transparent',
+        weight: isSel || kind === 'today' ? '600' : '400',
+        pY: (90 - hP).toFixed(1), pH: hP.toFixed(1),
+        fY: (90 - hP - hF).toFixed(1), fH: hF.toFixed(1),
+        cY: (90 - hP - hF - hC).toFixed(1), cH: hC.toFixed(1),
+        planY: yb(plan).toFixed(1), planH: plan ? (90 - yb(plan)).toFixed(1) : '0',
+        kcal: eaten ? eaten.toLocaleString('en-US') : plan ? plan.toLocaleString('en-US') : '—',
+        kcalColor: eaten ? '#1E1B18' : '#857C73',
+        pick: () => this.setState({ sel: num })
+      };
+    });
+    return {
+      menuOpen: !!s.menu, openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      cells, isEmpty: empty, hasData: !empty, barDay: s.sel === TODAY ? '' : dayName + ' ' + s.sel,
+      week, isMonth: s.view === 'month', isWeek: s.view === 'week',
+      periodLabel: s.view === 'month' ? 'Nov 2026' : '23 – 29 Nov',
+      views: [['week', 'Week'], ['month', 'Month']].map(([v, label]) => ({
+        label, selected: v === s.view ? 'true' : 'false', bg: v === s.view ? '#FFFFFF' : 'transparent', weight: v === s.view ? '600' : '500',
+        pick: () => this.setState({ view: v })
+      })),
+      dayTitle: title,
+      dayKcal: empty ? '—' : tpl.kcal.toLocaleString('en-US'), dayTarget: '2,490',
+      dayFib: empty ? '–' : tpl.fib, dayP: empty ? '–' : tpl.p, dayC: empty ? '–' : tpl.c, dayF: empty ? '–' : tpl.f,
+      copyDay: () => toast('Copied all meals of ' + dayName + ' ' + s.sel + ' Nov to today'),
+      meals: empty ? [] : tpl.meals.map(([name, items]) => ({
+        name, kcal: items.reduce((a, it) => a + it[2], 0),
+        copy: () => toast('Copied ' + name.toLowerCase() + ' to today'),
+        items: items.map(([n, amount, k, p, c, f, fb]) => ({ name: n, isRecipe: REC[n] !== undefined, isSingle: REC[n] === undefined, ingredients: REC[n] ? REC[n] + ' ingredients' : '', amount, kcal: String(k), p: p, c: c, f: f, fib: fb, promote: () => toast(n + ' added to today') }))
+      })),
+      hasToast: !!s.toast, toast: s.toast, undo: () => this.setState({ toast: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

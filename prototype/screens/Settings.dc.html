@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="flex-grow: 1; min-height: 0; padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{openMenu}}" aria-label="Open menu" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Settings</h1>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; padding: 0 4px; font-size: 12px; font-weight: 700; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">Tracking phase</h2>
+<div style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<label for="phase-start" style="display: flex; flex-direction: column"><span style="font-size: 14px">Current phase since</span><span style="font-size: 11px; color: #776E65">{{phaseName}}</span></label>
+<input id="phase-start" type="date" value="{{phaseStart}}" onChange="{{setStart}}" style="height: 40px; border: 1px solid #DED6CB; border-radius: 10px; padding: 0 8px; font: inherit; font-family: 'Manrope', sans-serif; font-size: 13px; color: #1E1B18; background: #FFFFFF">
+</div>
+<div style="font-size: 12px; color: #776E65; line-height: 1.45">The model (trend, maintenance, targets, check-ins) only uses food logs and weigh-ins from this date on. Older data is kept and stays visible in Body, Trends and Calendar.</div>
+<sc-if value="{{confirming}}" hint-placeholder-val="{{ false }}">
+<div style="background: #F6F3EE; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; line-height: 1.45">Start a new phase today? Maintenance restarts from your starting value and adapts again over the next 3 weeks. Nothing gets deleted.</span>
+<div style="display: flex; gap: 8px; justify-content: flex-end">
+<button onClick="{{cancelNew}}" style="min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #DED6CB; background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 600; color: #1E1B18">Cancel</button>
+<button onClick="{{confirmNew}}" style="min-height: 40px; padding: 0 14px; border-radius: 10px; border: none; background: #22A06B; font: inherit; font-size: 13px; font-weight: 700; color: #FFFFFF">Start new phase</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{notConfirming}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{askNew}}" style="min-height: 44px; border-radius: 10px; border: 1px solid #22A06B; background: #E6F5EC; font: inherit; font-size: 14px; font-weight: 700; color: #136A45">Start fresh from today</button>
+</sc-if>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #F2EDE6; padding-top: 6px">
+<span style="font-size: 11px; font-weight: 700; color: #776E65; padding-bottom: 2px">Previous phases</span>
+<sc-for list="{{pastPhases}}" as="ph" hint-placeholder-count="2">
+<div style="display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0"><span>{{ph.name}}</span><span style="font-family: 'Manrope', sans-serif; color: #776E65">{{ph.range}}</span></div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+<section style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; padding: 0 4px; font-size: 12px; font-weight: 700; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">{{g.title}}</h2>
+<div style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 18px; display: flex; flex-direction: column">
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 14px; border-top: {{r.divider}}">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="font-size: 14px">{{r.label}}</span>
+<sc-if value="{{r.hasSub}}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; color: #776E65">{{r.sub}}</span></sc-if>
+</div>
+<sc-if value="{{r.isSwitch}}" hint-placeholder-val="{{ false }}">
+<button role="switch" aria-checked="{{r.on}}" aria-label="{{r.label}}" onClick="{{r.toggle}}" style="width: 46px; height: 28px; border-radius: 18px; border: none; padding: 3px; background: {{r.track}}; display: flex; justify-content: {{r.knobPos}}">
+<span style="width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.25)"></span></button>
+</sc-if>
+<sc-if value="{{r.isLink}}" hint-placeholder-val="{{ true }}">
+<a href="{{r.href}}" style="display: flex; align-items: center; gap: 4px; min-height: 44px; font-family: 'Manrope', sans-serif; font-size: 13px; color: #4A433C; white-space: nowrap">{{r.value}}
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5ABA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></a>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; z-index: 10">
+<dc-import name="NavDrawer" active="Settings" hint-size="300px,844px"></dc-import>
+<button onClick="{{closeMenu}}" aria-label="Close menu" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { menu: false, garmin: true, confirming: false, phases: [{ name: 'Scale history only', range: 'Jan 2025 – Oct 2026' }], current: { name: 'Phase 1 · first food logs', start: '2026-10-29' } }; }
+  renderVals() {
+    const s = this.state;
+    const fmtD = (iso) => { const d = new Date(iso + 'T12:00:00'); return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear(); };
+    const link = (label, value, href, sub) => ({ label, value, href, sub: sub || '', hasSub: !!sub, isLink: true, isSwitch: false });
+    const sw = (label, key, sub) => ({
+      label, sub: sub || '', hasSub: !!sub, isLink: false, isSwitch: true,
+      on: s[key] ? 'true' : 'false', track: s[key] ? '#22A06B' : '#D6CEC4', knobPos: s[key] ? 'flex-end' : 'flex-start',
+      toggle: () => this.setState({ [key]: !s[key] })
+    });
+    const groups = [
+      { title: 'Goal & targets', rows: [
+        link('Goal', '−0.25–0.5 %/wk', 'Energy.dc.html'),
+        link('Macro targets', 'P 1.8–2.0 · F 0.5–0.8', 'Targets.dc.html', 'g per kg trend weight')
+      ] },
+      { title: 'Adaptive model', rows: [
+        link('Max change of target', '±50 kcal/day', '#'),
+        link('Calorie floor', '1,800 kcal', '#'),
+        link('Starting maintenance', '2,700 kcal', '#', 'used until 3 weeks of data exist')
+      ] },
+      { title: 'Data sources', rows: [
+        link('Google Health', 'Connected', '#', 'weight, body fat · synced 07:12'),
+        sw('Garmin calories', 'garmin', 'for calibration only, never for targets'),
+        link('Food database', 'Open Food Facts · DE', '#')
+      ] },
+      { title: 'General', rows: [
+        link('Units', 'kg · kcal', '#'),
+        link('Export data', 'CSV', '#')
+      ] }
+    ].map((g) => ({ title: g.title, rows: g.rows.map((r, i) => ({ ...r, divider: i === 0 ? 'none' : '1px solid #F2EDE6' })) }));
+    return {
+      menuOpen: !!s.menu, openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      groups,
+      phaseName: s.current.name, phaseStart: s.current.start,
+      setStart: (e) => this.setState({ current: { ...s.current, start: e.target.value } }),
+      confirming: !!s.confirming, notConfirming: !s.confirming,
+      askNew: () => this.setState({ confirming: true }), cancelNew: () => this.setState({ confirming: false }),
+      confirmNew: () => {
+        const prevNum = s.phases.length;
+        this.setState({
+          confirming: false,
+          phases: [{ name: s.current.name, range: fmtD(s.current.start) + ' – 25 Nov 2026' }].concat(s.phases),
+          current: { name: 'Phase ' + (prevNum + 1) + ' · started today', start: '2026-11-26' }
+        });
+      },
+      pastPhases: s.phases
+    };
+  }
+}
+</script>
+</body>
+</html>

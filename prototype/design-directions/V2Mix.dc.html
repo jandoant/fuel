@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Today – Combined</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden">
+<div style="padding: 16px 18px 0; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<button aria-label="Open menu" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(40,30,20,0.06)">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h10"/></svg></button>
+<div style="text-align: center">
+<div style="font-size: 17px; font-weight: 800">Today</div>
+<div style="font-size: 12px; font-weight: 600; color: #8A8178">Thursday, 26 November</div>
+</div>
+<a href="#" aria-label="Trend weight 78.4 kg" style="height: 44px; padding: 0 14px; border-radius: 22px; background: #FFFFFF; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 800; box-shadow: 0 1px 2px rgba(40,30,20,0.06)">78.4<span style="font-weight: 600; color: #8A8178">kg</span></a>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 4px 2px 2px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 15px; font-weight: 800">Calories</span>
+<span style="font-size: 13px; color: #8A8178; font-weight: 600"><span style="font-size: 17px; font-weight: 800; color: #1E1B18">1,260</span> left</span>
+</div>
+<div aria-hidden="true" style="position: relative; height: 8px; margin-bottom: -6px">
+<span style="position: absolute; top: 2px; left: calc(83.6% - 2.5px); width: 5px; height: 5px; border-radius: 3px; background: #22A06B"></span>
+<span style="position: absolute; top: 2px; left: calc(91.1% - 2.5px); width: 5px; height: 5px; border-radius: 3px; background: #22A06B"></span>
+</div>
+<div style="position: relative; height: 10px; border-radius: 5px; background: #E9E2D8; overflow: hidden">
+<div style="position: absolute; top: 0; bottom: 0; left: 42.5%; width: 41.6%; background: #BFE6D2"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 0; width: 42.5%; background: #22A06B; border-radius: 5px"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 83.6%; width: 7.5%; background: repeating-linear-gradient(135deg, rgba(255,255,255,0.95) 0 1.5px, transparent 1.5px 5px)"></div>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #8A8178">
+<span><span style="color: #1E1B18; font-weight: 800">1,190</span> eaten · <span style="color: #1E1B18; font-weight: 800">+1,165</span> planned</span>
+<span style="color: #177A50; font-weight: 700">fits · goal 2,340–2,550</span>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 2px 0">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px">
+<span style="font-size: 15px; font-weight: 800">Macros</span>
+<span style="display: flex; gap: 10px; font-size: 10px; font-weight: 700; color: #8A8178">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 3px; background: #8A8178"></span>eaten</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 3px; background: #DDD5CB"></span>planned</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 3px; border-radius: 2px; background: #1E1B18"></span>goal</span>
+</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{macros}}" as="m" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+<div style="position: relative; width: 76px; height: 76px">
+<svg width="76" height="76" viewBox="0 0 76 76" role="img" aria-label="{{m.aria}}">
+<circle cx="38" cy="38" r="28" fill="none" stroke="{{m.tint}}" stroke-width="10"/>
+<circle cx="38" cy="38" r="28" fill="none" stroke="{{m.soft}}" stroke-width="10" stroke-dasharray="{{m.planDash}}" stroke-dashoffset="{{m.planOff}}" transform="rotate(-90 38 38)"/>
+<circle cx="38" cy="38" r="28" fill="none" stroke="{{m.ink}}" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{m.eatDash}}" transform="rotate(-90 38 38)"/>
+<circle cx="38" cy="38" r="36" fill="none" stroke="#1E1B18" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="{{m.zoneDash}}" stroke-dashoffset="{{m.zoneOff}}" transform="rotate(-90 38 38)"/>
+</svg>
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center">
+<span style="font-size: 16px; font-weight: 800; line-height: 1">{{m.eaten}}</span>
+<span style="font-size: 10px; font-weight: 700; color: {{m.ink}}">+{{m.rest}}</span>
+</div>
+</div>
+<span style="font-size: 12px; font-weight: 800; color: {{m.ink}}">{{m.name}}</span>
+<span style="font-size: 10px; font-weight: 800; color: {{m.statusInk}}; background: {{m.statusBg}}; padding: 2px 8px; border-radius: 999px">{{m.status}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 16px 18px 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 10px">
+<span style="font-size: 17px; font-weight: 800">Today's plan</span>
+<a href="#" style="font-size: 13px; font-weight: 700; color: #177A50">Edit plan</a>
+</div>
+<sc-for list="{{meals}}" as="ml" hint-placeholder-count="4">
+<div style="display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 10px">
+<div style="display: flex; flex-direction: column; align-items: center">
+<span style="width: 32px; height: 32px; border-radius: 12px; background: {{ml.nodeBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ml.nodeInk}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ml.icon}}"/></svg></span>
+<span style="flex-grow: 1; width: 2px; background: {{ml.line}}; margin-top: 4px; border-radius: 1px"></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding-bottom: 18px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 6px">
+<span style="font-size: 15px; font-weight: 800">{{ml.name}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #8A8178">{{ml.kcal}} kcal</span>
+</div>
+<sc-for list="{{ml.items}}" as="it" hint-placeholder-count="2">
+<div style="background: {{it.bg}}; border: 1.5px {{it.borderStyle}} {{it.border}}; border-radius: 18px; padding: 9px 12px; display: flex; align-items: center; gap: 10px">
+<span style="width: 26px; height: 26px; border-radius: 13px; border: 2px solid {{it.checkBorder}}; background: {{it.checkBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{it.checkInk}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span>
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.name}}</span><sc-if value="{{it.recipe}}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; font-weight: 800; color: #7048C7; background: #F1EBFC; padding: 2px 7px; border-radius: 999px">RECIPE</span></sc-if></span>
+<span style="font-size: 11px; font-weight: 700; display: flex; gap: 8px; color: #8A8178">{{it.amount}}<span style="color: #4F46E5">P {{it.p}}</span><span style="color: #EA6A2A">F {{it.f}}</span><span style="color: #1F9D63">C {{it.c}}</span><span style="color: #A27B2C">Fib {{it.fib}}</span></span>
+</div>
+<span style="font-size: 14px; font-weight: 800">{{it.kcal}}</span>
+</div>
+</sc-for>
+<a href="#" style="border-radius: 18px; border: 1.5px dashed #DDD5CB; padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: #8A8178">
+<span style="width: 26px; height: 26px; border-radius: 13px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Add to {{ml.lower}}</span></a>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pct = (v, m) => Math.min(100, v / m * 100).toFixed(1) + '%';
+    const C = 2 * Math.PI * 28, C2 = 2 * Math.PI * 36;
+    const mac = (name, eaten, rest, lo, hi, ink, soft, tint, status, warn) => {
+      const m = hi ? hi * 1.3 : lo * 1.6;
+      const fe = Math.min(1, eaten / m), fp = Math.min(1 - fe, rest / m), z0 = lo / m, z1 = (hi ? hi : m) / m;
+      return { name, eaten, rest, ink, soft, tint, status,
+        statusInk: warn ? '#C2410C' : '#177A50', statusBg: warn ? '#FFEDE3' : '#E6F5EC',
+        aria: name + ': ' + eaten + ' g eaten, ' + rest + ' g more planned, goal ' + (hi ? lo + ' to ' + hi : 'at least ' + lo) + ' g',
+        eatDash: (fe * C) + ' ' + C, planDash: (fp * C) + ' ' + C, planOff: -(fe * C),
+        zoneDash: ((z1 - z0) * C2) + ' ' + C2, zoneOff: -(z0 * C2),
+        goal: hi ? lo + '–' + hi : '≥' + lo };
+    };
+    const item = (name, amount, kcal, p, f, c, fib, done, recipe) => ({ name, amount, kcal, p, f, c, fib, recipe,
+      bg: done ? '#FFFFFF' : 'transparent', border: done ? '#FFFFFF' : '#DDD5CB', borderStyle: done ? 'solid' : 'dashed',
+      checkBg: done ? '#22A06B' : '#FFFFFF', checkBorder: done ? '#22A06B' : '#D6CEC4', checkInk: done ? '#FFFFFF' : 'transparent' });
+    const meal = (name, kcal, icon, done, items) => ({ name, lower: name.toLowerCase(), kcal, icon, items,
+      nodeBg: done ? '#22A06B' : '#FFFFFF', nodeInk: done ? '#FFFFFF' : '#8A8178', line: done ? '#BFE6D2' : '#E6DFD6' });
+    return {
+      macros: [
+        mac('Protein', 70, 88, 141, 157, '#4F46E5', '#C7C9F7', '#EEF0FF', '1 g over', true),
+        mac('Fat', 28, 27, 39, 63, '#EA6A2A', '#F8CDB4', '#FFF1E8', 'fits', false),
+        mac('Carbs', 147, 158, 303, 356, '#1F9D63', '#B9E5CD', '#E8F6EE', 'fits', false),
+        mac('Fiber', 24, 15, 30, null, '#A27B2C', '#E9D7AE', '#FBF3E2', 'fits', false)
+      ],
+      meals: [
+        meal('Breakfast', 567, 'M12 3v2M5 12H3M21 12h-2M6 6l1.5 1.5M18 6l-1.5 1.5M8 16a4 4 0 0 1 8 0M3 20h18', true, [item('Overnight oats', '1 jar', 460, 30, 13, 55, 7, true, true), item('Banana', '1 medium', 107, 1, 0, 27, 3, true, false)]),
+        meal('Lunch', 622, 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6L19 19M5 19l1.4-1.4M17.6 6.4L19 5', true, [item('Chicken wrap', '1 wrap', 528, 56, 15, 38, 7, true, true), item('Apple', '1 medium', 94, 1, 0, 25, 4, true, false)]),
+        meal('Dinner', 784, 'M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z', false, [item('Lentil coconut curry', '1 serving', 524, 25, 23, 55, 13, false, true), item('Basmati rice', '200 g', 260, 5, 1, 56, 1, false, false)]),
+        meal('Snacks', 383, 'M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0zM9 9h.01M14 13h.01M10 15h.01', false, [item('Protein shake', '1 serving', 243, 33, 6, 15, 2, false, true), item('Rice cakes', '4 pieces', 140, 3, 1, 30, 1, false, false)])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

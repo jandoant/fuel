@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Food details</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden">
+<div style="flex-grow: 1; min-height: 0; padding: 14px 18px 24px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto">
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="AddFood.dc.html" aria-label="Back to Add food" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; color: #1E1B18">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+<h1 style="margin: 0; font-size: 18px; font-weight: 700">Skyr natur</h1>
+<div style="font-size: 12px; color: #776E65">Milbona · EAN 4056489012345</div>
+</div>
+<button aria-label="Add to favorites" style="width: 44px; height: 44px; border: none; background: transparent; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></button>
+</div>
+
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<span style="font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #EFE9E1; color: #4A433C">Source: Open Food Facts</span>
+<span style="font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #EFE9E1; color: #4A433C">Cached</span>
+</div>
+
+<div style="font-size: 12px; color: #776E65; padding: 0 2px">Per serving (150 g) · serving size from Open Food Facts</div>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 16px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{summary}}" as="s" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; font-weight: 700; color: {{s.color}}">{{s.label}}</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 19px; font-weight: 700">{{s.value}}</span>
+<span style="height: 3px; width: 24px; border-radius: 2px; background: {{s.color}}"></span>
+</div>
+</sc-for>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 10px 16px; display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 1fr 72px 72px; font-size: 12px; color: #776E65; padding: 4px 0 6px; border-bottom: 1px solid #EFE9E1">
+<span>Nutrient</span><span style="text-align: right">100 g</span><span style="text-align: right">Serving</span>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: 1fr 72px 72px; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #F2EDE6">
+<span style="color: {{r.labelColor}}">{{r.name}}</span>
+<span style="text-align: right; font-family: 'Manrope', sans-serif; color: #776E65">{{r.per100}}</span>
+<span style="text-align: right; font-family: 'Manrope', sans-serif">{{r.portion}}</span>
+</div>
+</sc-for>
+<div style="font-size: 12px; color: #9A3412; padding-top: 8px">Fibre missing in Open Food Facts · <a href="#" style="color: #9A3412; text-decoration: underline">fill in</a></div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">Serving units</h2>
+<span style="font-size: 11px; color: #776E65">step and range for − / +</span>
+</div>
+<sc-for list="{{units}}" as="u" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-top: 1px solid #F2EDE6">
+<div style="display: flex; align-items: center; gap: 6px">
+<input type="text" value="{{u.name}}" onChange="{{u.setName}}" aria-label="Unit name" readOnly="{{u.locked}}" style="flex-grow: 1; min-width: 0; height: 30px; border: 1px solid {{u.nameBorder}}; border-radius: 7px; padding: 0 8px; font: inherit; font-size: 13px; font-weight: 700; color: #1E1B18; background: {{u.nameBg}}; box-sizing: border-box">
+<span style="font-size: 12px; color: #776E65">=</span>
+<input type="text" inputmode="decimal" value="{{u.grams}}" onChange="{{u.setGrams}}" aria-label="Grams per {{u.name}}" readOnly="{{u.locked}}" style="width: 56px; text-align: right; height: 30px; border: 1px solid #DED6CB; border-radius: 7px; padding: 0 6px; font-family: 'Manrope', sans-serif; font-size: 12px; color: #1E1B18; background: #FFFFFF; box-sizing: border-box">
+<span style="font-size: 12px; color: #776E65">g</span>
+<sc-if value="{{u.removable}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{u.remove}}" aria-label="Remove {{u.name}}" style="width: 32px; height: 32px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5ABA0" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</sc-if>
+<sc-if value="{{u.locked}}" hint-placeholder-val="{{ false }}"><span style="width: 32px"></span></sc-if>
+</div>
+<div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: #776E65; flex-wrap: wrap">
+<label style="display: flex; align-items: center; gap: 4px">Step <input type="text" inputmode="decimal" value="{{u.step}}" onChange="{{u.setStep}}" style="width: 44px; text-align: center; height: 30px; border: 1px solid #DED6CB; border-radius: 7px; padding: 0 6px; font-family: 'Manrope', sans-serif; font-size: 12px; color: #1E1B18; background: #FFFFFF; box-sizing: border-box"></label>
+<label style="display: flex; align-items: center; gap: 4px; margin-left: 6px">Range <input type="text" inputmode="decimal" value="{{u.min}}" onChange="{{u.setMin}}" aria-label="Minimum" style="width: 44px; text-align: center; height: 30px; border: 1px solid #DED6CB; border-radius: 7px; padding: 0 6px; font-family: 'Manrope', sans-serif; font-size: 12px; color: #1E1B18; background: #FFFFFF; box-sizing: border-box"></label>
+<span>–</span>
+<input type="text" inputmode="decimal" value="{{u.max}}" onChange="{{u.setMax}}" aria-label="Maximum" style="width: 48px; text-align: center; height: 30px; border: 1px solid #DED6CB; border-radius: 7px; padding: 0 6px; font-family: 'Manrope', sans-serif; font-size: 12px; color: #1E1B18; background: #FFFFFF; box-sizing: border-box">
+<span style="flex-grow: 1"></span>
+<button onClick="{{u.makeDefault}}" aria-pressed="{{u.isDefault}}" style="height: 26px; padding: 0 8px; border-radius: 999px; border: 1px solid {{u.defBorder}}; background: {{u.defBg}}; font: inherit; font-size: 11px; font-weight: 700; color: {{u.defColor}}">{{u.defLabel}}</button>
+</div>
+<span style="font-size: 10px; color: #857C73">{{u.source}}</span>
+</div>
+</sc-for>
+<button onClick="{{addUnit}}" style="display: flex; align-items: center; gap: 8px; min-height: 40px; border: 1px dashed #D6CEC4; border-radius: 10px; background: transparent; padding: 0 12px; font: inherit; font-size: 13px; font-weight: 700; color: #177A50">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#177A50" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add serving unit</span></button>
+</section>
+</div>
+
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { grams: 150, def: 1, units: [
+    { name: 'g', grams: 1, step: 10, min: 10, max: 1000, locked: true, source: 'Built in · grams are always available' },
+    { name: 'cup', grams: 150, step: 0.5, min: 0.5, max: 4, locked: false, source: 'From Open Food Facts serving size' },
+    { name: 'tub', grams: 500, step: 0.25, min: 0.25, max: 2, locked: false, source: 'Added by you' }
+  ] }; }
+  renderVals() {
+    const g = this.state.grams;
+    const per100 = { kcal: 63, fat: 0.2, sat: 0.1, carbs: 4.0, sugar: 4.0, protein: 11.0, salt: 0.1 };
+    const f = (v) => (v * g / 100).toFixed(1);
+    const presets = [[100, '100 g'], [150, '150 g'], [250, '250 g'], [500, 'Cup 500 g']];
+    const units = this.state.units;
+    const upd = (i, key, num) => (e) => {
+      const t = e.target.value;
+      const val = num ? (isNaN(parseFloat(t.replace(',', '.'))) ? t : t) : t;
+      const next = units.map((u, k) => k === i ? { ...u, [key]: val } : u);
+      this.setState({ units: next });
+    };
+    const unitRows = units.map((u, i) => ({
+      name: u.name, grams: String(u.grams), step: String(u.step), min: String(u.min), max: String(u.max),
+      locked: !!u.locked, removable: !u.locked, source: u.source,
+      nameBorder: u.locked ? 'transparent' : '#DED6CB', nameBg: u.locked ? '#F6F3EE' : '#FFFFFF',
+      isDefault: this.state.def === i ? 'true' : 'false',
+      defLabel: this.state.def === i ? 'Default' : 'Set default',
+      defBg: this.state.def === i ? '#E6F5EC' : '#FFFFFF', defBorder: this.state.def === i ? '#22A06B' : '#DED6CB', defColor: this.state.def === i ? '#136A45' : '#776E65',
+      makeDefault: () => this.setState({ def: i }),
+      setName: upd(i, 'name', false), setGrams: upd(i, 'grams', true), setStep: upd(i, 'step', true), setMin: upd(i, 'min', true), setMax: upd(i, 'max', true),
+      remove: () => this.setState({ units: units.filter((_, k) => k !== i), def: this.state.def === i ? 0 : (this.state.def > i ? this.state.def - 1 : this.state.def) })
+    }));
+    return {
+      units: unitRows,
+      addUnit: () => this.setState({ units: units.concat([{ name: 'new unit', grams: 100, step: 1, min: 1, max: 10, locked: false, source: 'Added by you' }]) }),
+      grams: g,
+      kcal: Math.round(per100.kcal * g / 100),
+      chips: presets.map(([v, label]) => ({
+        label, pick: () => this.setState({ grams: v }),
+        bg: v === g ? '#E6F5EC' : '#FFFFFF', border: v === g ? '#22A06B' : '#DED6CB'
+      })),
+      summary: [
+        { label: 'kcal', value: String(Math.round(per100.kcal * g / 100)), color: '#1E1B18' },
+        { label: 'Protein', value: f(per100.protein) + ' g', color: '#4F46E5' },
+        { label: 'Fat', value: f(per100.fat) + ' g', color: '#EA6A2A' },
+        { label: 'Carbs', value: f(per100.carbs) + ' g', color: '#22A06B' }
+      ],
+      rows: [
+        { name: 'Energy (kcal)', per100: '63', portion: String(Math.round(per100.kcal * g / 100)), labelColor: '#1E1B18' },
+        { name: 'Fat', per100: '0.2', portion: f(per100.fat), labelColor: '#EA6A2A' },
+        { name: '  of which saturated', per100: '0.1', portion: f(per100.sat), labelColor: '#776E65' },
+        { name: 'Carbohydrates', per100: '4.0', portion: f(per100.carbs), labelColor: '#22A06B' },
+        { name: '  of which sugars', per100: '4.0', portion: f(per100.sugar), labelColor: '#776E65' },
+        { name: 'Protein', per100: '11.0', portion: f(per100.protein), labelColor: '#4F46E5' },
+        { name: 'Salt', per100: '0.1', portion: f(per100.salt), labelColor: '#1E1B18' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

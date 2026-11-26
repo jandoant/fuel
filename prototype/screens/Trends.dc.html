@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Calories and weight</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="flex-grow: 1; padding: 16px 18px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{openMenu}}" aria-label="Open menu" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Trends</h1>
+</div>
+
+<div role="tablist" aria-label="Time range" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #EFE9E1; border-radius: 10px; padding: 3px">
+<sc-for list="{{ranges}}" as="r" hint-placeholder-count="3">
+<button role="tab" aria-selected="{{r.selected}}" onClick="{{r.pick}}" style="border: none; font: inherit; font-size: 13px; font-weight: {{r.weight}}; min-height: 38px; border-radius: 8px; background: {{r.bg}}; color: #1E1B18">{{r.label}}</button>
+</sc-for>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 12px 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">Calories &amp; weight</h2>
+<span style="font-size: 12px; color: #776E65">{{barUnit}}</span>
+</div>
+<svg width="330" height="230" viewBox="0 0 330 230" role="img" aria-label="Calorie intake as bars with the calorie target as a dashed line on the left axis, and weight trend with weigh-ins on the right axis">
+<line x1="30" y1="10" x2="298" y2="10" stroke="#F2EDE6"/>
+<line x1="30" y1="65" x2="298" y2="65" stroke="#F2EDE6"/>
+<line x1="30" y1="120" x2="298" y2="120" stroke="#F2EDE6"/>
+<line x1="30" y1="175" x2="298" y2="175" stroke="#F2EDE6"/>
+<line x1="30" y1="210" x2="298" y2="210" stroke="#DED6CB"/>
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="28">
+<rect x="{{b.x}}" y="{{b.y}}" width="{{b.w}}" height="{{b.h}}" rx="1.5" fill="#E2DACF"/>
+</sc-for>
+<polyline points="{{target}}" fill="none" stroke="#776E65" stroke-width="1.5" stroke-dasharray="4 3"/>
+<sc-for list="{{wdots}}" as="d" hint-placeholder-count="28">
+<circle cx="{{d.x}}" cy="{{d.y}}" r="2" fill="#9ED8BA"/>
+</sc-for>
+<polyline points="{{wline}}" fill="none" stroke="#22A06B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="26" y="14" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">4k</text>
+<text x="26" y="69" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">3k</text>
+<text x="26" y="124" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">2k</text>
+<text x="26" y="179" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">1k</text>
+<text x="26" y="213" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">0</text>
+<text x="302" y="14" font-size="9" fill="#177A50" font-family="Manrope, sans-serif">{{wTop}}</text>
+<text x="302" y="124" font-size="9" fill="#177A50" font-family="Manrope, sans-serif">{{wBot}}</text>
+<text x="302" y="134" font-size="9" fill="#177A50" font-family="Manrope, sans-serif">kg</text>
+<text x="30" y="226" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">{{xStart}}</text>
+<text x="298" y="226" text-anchor="end" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">Today</text>
+</svg>
+<div style="display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px; font-size: 11px; color: #776E65; padding: 0 4px">
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 10px; border-radius: 2px; background: #E2DACF"></span>intake (kcal, left)</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 0; border-top: 1.5px dashed #776E65"></span>target</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 3px; border-radius: 2px; background: #22A06B"></span>weight trend (kg, right)</span>
+</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #776E65">Avg intake</span><span style="font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700">{{avgIntake}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #776E65">Avg target</span><span style="font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700">{{avgTarget}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #776E65">Weight</span><span style="font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700">{{wDelta}}</span></div>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 12px 10px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 4px; background: #A27B2C"></span>Fiber</h2>
+<span style="font-size: 12px; color: #776E65">avg <span style="font-family: 'Manrope', sans-serif; color: #1E1B18; font-weight: 700">{{fibAvg}} g</span> · ≥30 g on {{fibDays}}</span>
+</div>
+<svg width="330" height="76" viewBox="0 0 330 76" role="img" aria-label="Fiber intake per period as bars with the 30 gram target as a dashed line">
+<line x1="30" y1="70" x2="298" y2="70" stroke="#DED6CB"/>
+<sc-for list="{{fibBars}}" as="b" hint-placeholder-count="28">
+<rect x="{{b.x}}" y="{{b.y}}" width="{{b.w}}" height="{{b.h}}" rx="1.5" fill="#D2B472"/>
+</sc-for>
+<line x1="30" y1="{{fibLineY}}" x2="298" y2="{{fibLineY}}" stroke="#1E1B18" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="26" y="{{fibLabelY}}" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">30g</text>
+<text x="26" y="73" text-anchor="end" font-size="9" fill="#776E65" font-family="Manrope, sans-serif">0</text>
+</svg>
+</section>
+<dc-import name="Micros" variant="avg" framed="{{ true }}" hint-size="100%,44px"></dc-import>
+</div>
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; z-index: 10">
+<dc-import name="NavDrawer" active="Trends" hint-size="300px,844px"></dc-import>
+<button onClick="{{closeMenu}}" aria-label="Close menu" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { menu: false, range: '4W' }; }
+  renderVals() {
+    const range = this.state.range;
+    const cfg = {
+      '4W': { n: 28, keys: [[0, 79.6], [1, 78.4]], start: '29 Oct', unit: 'daily', tKeys: [2530, 2510, 2490, 2450], missing: [9, 20] },
+      '6M': { n: 26, keys: [[0, 81.4], [0.25, 81.6], [0.45, 80.2], [0.6, 80.4], [1, 78.4]], start: 'May', unit: 'weekly average', tKeys: [2600, 2620, 2550, 2560, 2450], missing: [] },
+      'All': { n: 23, keys: [[0, 84.0], [0.15, 85.1], [0.4, 82.3], [0.55, 82.6], [0.7, 81.5], [0.85, 80.0], [1, 78.4]], start: 'Jan 2025', unit: 'monthly average', tKeys: [2500, 2900, 2550, 2700, 2600, 2500, 2450], missing: [] }
+    }[range];
+    const interp = (keys, t) => {
+      for (let j = 1; j < keys.length; j++) if (t <= keys[j][0]) {
+        const u = (t - keys[j - 1][0]) / (keys[j][0] - keys[j - 1][0]);
+        return keys[j - 1][1] + (keys[j][1] - keys[j - 1][1]) * (0.5 - Math.cos(Math.PI * u) / 2);
+      }
+      return keys[keys.length - 1][1];
+    };
+    const n = cfg.n;
+    const step = (i) => cfg.tKeys[Math.min(cfg.tKeys.length - 1, Math.floor(i / n * cfg.tKeys.length))];
+    const noiseK = [120, -260, 80, 340, -150, 30, -90, 410, -220, 60, 190, -310, 140, -40];
+    const noiseW = [0.5, -0.3, 0.1, 0.7, -0.4, 0.2, -0.6, 0.4, 0.0, -0.2, 0.6, -0.5, 0.3, -0.1];
+    const amp = range === '4W' ? 1 : 0.35;
+    const slot = 268 / n;
+    const xc = (i) => 30 + slot * (i + 0.5);
+    const yK = (k) => 210 - k / 4000 * 200;
+    const bars = [];
+    let sumI = 0, cntI = 0, sumT = 0;
+    const tPts = [];
+    for (let i = 0; i < n; i++) {
+      const t = step(i);
+      sumT += t;
+      tPts.push((30 + slot * i).toFixed(1) + ',' + yK(t).toFixed(1));
+      tPts.push((30 + slot * (i + 1)).toFixed(1) + ',' + yK(t).toFixed(1));
+      if (cfg.missing.indexOf(i) >= 0) continue;
+      const k = t + 20 + noiseK[i % noiseK.length] * amp;
+      sumI += k; cntI++;
+      const top = yK(k);
+      bars.push({ x: (xc(i) - slot * 0.32).toFixed(1), w: (slot * 0.64).toFixed(1), y: top.toFixed(1), h: (210 - top).toFixed(1) });
+    }
+    const raw = [], tr = [];
+    let e = 0;
+    for (let i = 0; i < n; i++) {
+      const b = interp(cfg.keys, i / (n - 1));
+      const w = b + noiseW[i % noiseW.length] * (range === '4W' ? 1 : 0.4);
+      e = i === 0 ? b : e + 0.25 * (w - e);
+      raw.push(w); tr.push(i === n - 1 ? 78.4 : e);
+    }
+    const hi = Math.ceil(Math.max(...raw) + 0.3), lo = Math.floor(Math.min(...raw) - 0.3);
+    const yW = (w) => 10 + (hi - w) / (hi - lo) * 110;
+    const fmt = (v) => Math.round(v / 10 * 1) * 10;
+    const drop = tr[0] - 78.4;
+    const fibNoise = [6, -4, 2, -7, 9, -2, -5, 4, 0, 7, -6, 3, -3, 5];
+    const fibBase = range === '4W' ? 27 : range === '6M' ? 26 : 24;
+    const yF = (g) => 70 - Math.min(g, 45) / 45 * 64;
+    const fibBars = []; let fSum = 0, fCnt = 0, fOk = 0;
+    for (let i = 0; i < n; i++) {
+      if (cfg.missing.indexOf(i) >= 0) continue;
+      const g = fibBase + fibNoise[i % fibNoise.length] * (range === '4W' ? 1 : 0.4);
+      fSum += g; fCnt++; if (g >= 30) fOk++;
+      fibBars.push({ x: (xc(i) - slot * 0.32).toFixed(1), w: (slot * 0.64).toFixed(1), y: yF(g).toFixed(1), h: (70 - yF(g)).toFixed(1) });
+    }
+    return {
+      menuOpen: !!this.state.menu, openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      ranges: [['4W', '4 weeks'], ['6M', '6 months'], ['All', 'All time']].map(([r, label]) => ({
+        label, selected: r === range ? 'true' : 'false', bg: r === range ? '#FFFFFF' : 'transparent', weight: r === range ? '600' : '500',
+        pick: () => this.setState({ range: r })
+      })),
+      barUnit: 'bars = ' + cfg.unit,
+      bars, target: tPts.join(' '),
+      wdots: raw.map((w, i) => ({ x: xc(i).toFixed(1), y: yW(w).toFixed(1) })),
+      wline: tr.map((w, i) => xc(i).toFixed(1) + ',' + yW(w).toFixed(1)).join(' '),
+      wTop: String(hi), wBot: String(lo), xStart: cfg.start,
+      avgIntake: fmt(sumI / cntI).toLocaleString('en-US'),
+      avgTarget: fmt(sumT / n).toLocaleString('en-US'),
+      fibBars, fibAvg: String(Math.round(fSum / fCnt)), fibDays: fOk + ' of ' + fCnt + (range === '4W' ? ' days' : range === '6M' ? ' weeks' : ' months'),
+      fibLineY: yF(30).toFixed(1), fibLabelY: (yF(30) + 3).toFixed(1),
+      wDelta: (drop >= 0 ? '−' : '+') + Math.abs(drop).toFixed(1) + ' kg'
+    };
+  }
+}
+</script>
+</body>
+</html>

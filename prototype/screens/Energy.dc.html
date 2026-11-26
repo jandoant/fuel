@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Energy and TDEE</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#177A50;text-decoration:none}a:hover{color:#136A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F3EE; font-family: 'Manrope', system-ui, sans-serif; color: #1E1B18; display: flex; flex-direction: column; overflow: hidden; position: relative">
+<div style="flex-grow: 1; padding: 16px 18px 10px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{openMenu}}" aria-label="Open menu" style="width: 44px; height: 44px; margin-left: -10px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E1B18" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Energy</h1>
+</div>
+<a href="CheckIn.dc.html" style="display: flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #E6F5EC; font-size: 13px; font-weight: 700; color: #136A45">
+<span style="width: 7px; height: 7px; border-radius: 4px; background: #22A06B"></span>Week 48 check-in</a>
+</div>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">Maintenance</span>
+<span style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">2,770<span style="font-size: 14px; color: #776E65; font-weight: 600"> kcal/day</span></span>
+</div>
+<span style="font-family: 'Manrope', sans-serif; font-size: 13px; color: #776E65; padding-top: 18px">±110</span>
+</div>
+<svg width="322" height="88" viewBox="0 0 322 96" role="img" aria-label="Maintenance estimate over 8 weeks with an uncertainty band that narrows as data accumulates">
+<polygon points="{{band}}" fill="#CDEBDC"/>
+<polyline points="{{line}}" fill="none" stroke="#22A06B" stroke-width="2.5" stroke-linejoin="round"/>
+<sc-for list="{{weeks}}" as="w" hint-placeholder-count="8">
+<text x="{{w.x}}" y="94" text-anchor="middle" font-size="9" fill="#857C73" font-family="Manrope, sans-serif">{{w.label}}</text>
+</sc-for>
+</svg>
+<div style="font-size: 12px; color: #776E65">Avg intake 2,440 + trend −0.30 kg/wk · last 28 days</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700">Goal</h2>
+<div role="radiogroup" aria-label="Goal rate" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{goals}}" as="g" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{g.checked}}" onClick="{{g.pick}}" style="min-height: 44px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: {{g.weight}}; border: 1px solid {{g.border}}; background: {{g.bg}}; color: #1E1B18">{{g.label}}</button>
+</sc-for>
+</div>
+<div style="font-size: 12px; color: #776E65">{{goalKg}} at 78.4 kg trend weight</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; color: #776E65; text-transform: uppercase; letter-spacing: 0.06em">Today's target</span>
+<span style="font-size: 12px; color: #776E65">band <span style="font-family: 'Manrope', sans-serif; color: #1E1B18">{{bandText}}</span></span>
+</div>
+<span style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">{{target}}<span style="font-size: 14px; color: #776E65; font-weight: 600"> kcal</span></span>
+<div style="font-size: 12px; color: #776E65"><a href="Targets.dc.html">Protein and fat</a> from your g/kg ranges · carbs fill the rest</div>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #F1ECE5; box-shadow: 0 1px 2px rgba(40,30,20,0.04); border-radius: 22px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 13px; color: #776E65">Actual rate <span style="font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 700; color: #1E1B18">−0.38 %/wk</span></span>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: {{rateBg}}; color: {{rateColor}}">{{rateStatus}}</span>
+</div>
+<svg width="322" height="16" viewBox="0 0 322 16" role="img" aria-label="Actual weekly rate compared with the goal range">
+<rect x="0" y="5" width="322" height="6" rx="3" fill="#F2EDE6"/>
+<rect x="{{goalX}}" y="3" width="{{goalW}}" height="10" rx="5" fill="#CDEBDC"/>
+<circle cx="{{actX}}" cy="8" r="5" fill="#1E1B18"/>
+</svg>
+<div style="display: flex; justify-content: space-between; font-family: 'Manrope', sans-serif; font-size: 10px; color: #857C73"><span>−1.25 %</span><span>0</span><span>+0.75 %</span></div>
+</section>
+</div>
+
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; z-index: 10">
+<dc-import name="NavDrawer" active="Energy" hint-size="300px,844px"></dc-import>
+<button onClick="{{closeMenu}}" aria-label="Close menu" style="flex-grow: 1; border: none; background: rgba(23,25,27,0.42)"></button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { goal: 1 }; }
+  renderVals() {
+    const maint = [2610, 2700, 2760, 2800, 2820, 2800, 2810, 2770];
+    const err = [420, 330, 260, 200, 160, 140, 120, 110];
+    const y = (k) => 82 - (k - 2200) * 0.09;
+    const xs = maint.map((_, i) => 14 + i * 42);
+    const line = maint.map((k, i) => xs[i] + ',' + y(k).toFixed(1)).join(' ');
+    const upper = maint.map((k, i) => xs[i] + ',' + y(k + err[i]).toFixed(1));
+    const lower = maint.map((k, i) => xs[i] + ',' + y(k - err[i]).toFixed(1)).reverse();
+    const weeks = ['W41', 'W42', 'W43', 'W44', 'W45', 'W46', 'W47', 'W48'].map((label, i) => ({ label, x: xs[i] }));
+    const defs = [
+      ['Maintain', 0, 0], ['Lose 0.25–0.5 %/wk', -0.25, -0.5],
+      ['Lose 0.5–1.0 %/wk', -0.5, -1.0], ['Gain 0.25–0.5 %/wk', 0.25, 0.5]
+    ];
+    const sel = defs[this.state.goal];
+    const kcal = (pct) => Math.round((2770 + pct * 78.4 / 100 * 7700 / 7) / 10) * 10;
+    const kg = (pct) => (pct * 78.4 / 100).toFixed(2);
+    const a = kcal(sel[1]), b = kcal(sel[2]);
+    const lo = Math.min(a, b), hi = Math.max(a, b);
+    const mid = Math.round((lo + hi) / 20) * 10;
+    const fmt = (n) => n.toLocaleString('en-US');
+    const sx = (pct) => ((pct + 1.25) / 2 * 322);
+    const gLo = Math.min(sel[1], sel[2]), gHi = Math.max(sel[1], sel[2]);
+    const act = -0.38;
+    const inRange = sel[1] === 0 ? Math.abs(act) < 0.1 : act >= gLo && act <= gHi;
+    return {
+      menuOpen: !!this.state.menu, openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      line, band: upper.concat(lower).join(' '), weeks,
+      goals: defs.map((d, i) => ({
+        label: d[0], checked: i === this.state.goal ? 'true' : 'false',
+        bg: i === this.state.goal ? '#E6F5EC' : '#FFFFFF', border: i === this.state.goal ? '#22A06B' : '#DED6CB',
+        weight: i === this.state.goal ? '600' : '500', pick: () => this.setState({ goal: i })
+      })),
+      goalKg: sel[1] === 0 ? '± 0 kg/week' : kg(sel[1]) + ' to ' + kg(sel[2]) + ' kg/week',
+      target: fmt(mid), bandText: lo === hi ? fmt(lo) : fmt(lo) + '–' + fmt(hi),
+      rateStatus: inRange ? 'On track' : (act < gLo ? 'Faster than goal' : 'Slower than goal'),
+      rateBg: inRange ? '#E6F5EC' : '#FBEBDD', rateColor: inRange ? '#136A45' : '#9A3412',
+      goalX: sx(gLo === gHi ? -0.05 : gLo).toFixed(1), goalW: (sx(gLo === gHi ? 0.05 : gHi) - sx(gLo === gHi ? -0.05 : gLo)).toFixed(1),
+      actX: sx(act).toFixed(1)
+    };
+  }
+}
+</script>
+</body>
+</html>
