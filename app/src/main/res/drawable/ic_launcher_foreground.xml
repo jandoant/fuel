@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from assets/icon/ic_fuel_foreground.svg: a flame whose core is a leaf. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:pathData="M55,24 C61,37 75,45 75,62 C75,74 66,83 54,83 C42,83 33,74 33,62 C33,53.5 37.5,47 43,43 C42.5,49.5 45,54 49,56 C46.5,45 49,33 55,24 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="33" android:startY="83" android:endX="47.7" android:endY="24">
+                <item android:offset="0" android:color="#177A50" />
+                <item android:offset="0.45" android:color="#22A06B" />
+                <item android:offset="0.8" android:color="#E9A23B" />
+                <item android:offset="1" android:color="#EA6A2A" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#F6F3EE" android:pathData="M53.5,78.5 C45,73 45.5,61.5 57,53 C63.5,62 62,73.5 53.5,78.5 Z" />
+    <path android:strokeColor="#22A06B" android:strokeWidth="1.8" android:strokeLineCap="round"
+        android:pathData="M53.8,76.5 C54.5,69 55.5,63 57.2,57" />
+</vector>
