@@ -48,6 +48,8 @@ object MicroReferences {
     const val SAT_FAT_MAX_ENERGY_SHARE = 0.10
     /** Below this share of the reference a vitamin/mineral counts as "low". */
     const val LOW_RATIO = 0.75
+    /** Energy used for the 10 %-of-energy limits when there is no calorie target yet (DGE reference). */
+    const val REFERENCE_ENERGY_KCAL = 2000.0
 
     val DGE: Map<Nutrient, Double> = mapOf(
         Nutrient.POTASSIUM to 4000.0,

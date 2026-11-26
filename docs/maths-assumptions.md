@@ -24,9 +24,5 @@ Jan confirmed all of them on 2026-11-26 (decisions #26–28); G14 and G17 were c
 | G16 | Rate status for Gain | Direction-aware ("faster" = gaining more than goal). The Energy mockup treated gain like loss | — |
 | G17 | Actual rate | 28-day weigh-in regression slope ÷ trend weight (same as Balance from weight) | Trend change over the last 7 days |
 
-## Unverified build bits
-- Google-hosted versions (AGP 9.5.0, Compose BOM 2026.10.00, activity-compose 1.12.0) and `compileSdk = 37`
-  could not be checked from the build container. Android Studio's upgrade assistant will fix them if needed.
-- Manrope is not bundled yet (`ui/theme/Theme.kt` TODO).
-- Only `:core-model` was built and tested here (53 tests pass, Gradle 9.9.2, Kotlin 2.4.21, JDK 21).
-  The `:app` module has not been compiled.
+## Build
+Verified locally 2026-11-27: AGP 9.5.3, Kotlin 2.4.21, Compose BOM 2026.11.01, compileSdk 37.1 (Compose 1.13 requires it), Gradle 9.9.2, JDK 21. Manrope is bundled as a variable font (`app/src/main/res/font/manrope.ttf`).

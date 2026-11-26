@@ -198,7 +198,7 @@ private fun NutritionCard(r: RecipeTemplate) {
         Text("Bars: share of calories · fiber: share of 30 g goal", style = FuelType.Micro.copy(fontWeight = FontWeight.Medium), color = FuelColors.Subtle)
         val portions = r.ingredients
         MicrosSection(
-            MicroReferences.report(n, n.kcal, MicroScope.DAY, portions.count { MicroReferences.hasFullData(it.food.per100g) }, portions.size),
+            MicroReferences.report(n, MicroReferences.REFERENCE_ENERGY_KCAL, MicroScope.DAY, portions.count { MicroReferences.hasFullData(it.food.per100g) }, portions.size),
             MicroScope.DAY,
         )
     }

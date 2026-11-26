@@ -94,7 +94,7 @@ fun AddFoodScreen(nav: Navigator, route: AddFoodRoute) {
     Column(Modifier.fillMaxSize().testTag("addFood")) {
         Column(Modifier.padding(start = 18.dp, end = 18.dp, top = 14.dp, bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             SubScreenHeader("Add food", nav::back, subtitle = s?.destinationText?.let { "Adding to $it" })
-            BarcodeScannerBox(vm::onBarcode)
+            if (query.isBlank()) BarcodeScannerBox(vm::onBarcode)
             SearchField(query, { vm.query.value = it })
             if (query.isBlank()) SegmentedTabs(ListTab.entries.map { it.label }, s?.tab?.ordinal ?: 0, { vm.tab.value = ListTab.entries[it] })
         }

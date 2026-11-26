@@ -53,7 +53,7 @@ object DayStates {
         val portions = counted.flatMap { it.portions }
         val micros = MicroReferences.report(
             total = total,
-            energyKcal = zone?.target ?: total.kcal,
+            energyKcal = zone?.target ?: MicroReferences.REFERENCE_ENERGY_KCAL,
             scope = scope,
             itemsWithFullData = portions.count { MicroReferences.hasFullData(it.food.per100g) },
             itemCount = portions.size,

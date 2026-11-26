@@ -71,6 +71,7 @@ fun FuelCard(
 ) {
     Column(
         modifier
+            .fillMaxWidth()
             .shadow(1.dp, shape, ambientColor = Color(0x14281E14), spotColor = Color(0x14281E14))
             .background(FuelColors.Surface, shape)
             .border(1.dp, border, shape)

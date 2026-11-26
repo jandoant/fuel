@@ -66,7 +66,7 @@ fun TrendsScreen(nav: Navigator) {
         Fiber(m, from, bucket)
         val logged = m.days.values.filter { it.eaten != null && !it.date.isBefore(from) && it.date.isBefore(m.today) }
         val avg = if (logged.isEmpty()) Nutrients.ZERO else Nutrients.sum(logged.map { it.eatenNutrients }) * (1.0 / logged.size)
-        val target = logged.mapNotNull { m.zoneFor(it.date)?.target }.average().takeIf { !it.isNaN() } ?: avg.kcal
+        val target = logged.mapNotNull { m.zoneFor(it.date)?.target }.average().takeIf { !it.isNaN() } ?: MicroReferences.REFERENCE_ENERGY_KCAL
         MicrosSection(
             if (logged.isEmpty()) null else MicroReferences.report(avg, target, MicroScope.AVERAGE, 0, logged.sumOf { it.itemCount }),
             MicroScope.AVERAGE, framed = true,
