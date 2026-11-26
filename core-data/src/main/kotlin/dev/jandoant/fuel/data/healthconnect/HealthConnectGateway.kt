@@ -291,7 +291,7 @@ class HealthConnectGateway(
             HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class),
         )
         val ALL_PERMISSIONS: Set<String> = READ_PERMISSIONS + GARMIN_PERMISSIONS + WRITE_NUTRITION +
-            HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY
+            HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY + HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND
 
         fun mealType(slotId: String): Int = when (slotId) {
             MealSlot.BREAKFAST -> MealType.MEAL_TYPE_BREAKFAST

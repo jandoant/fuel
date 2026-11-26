@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Fuel</string>
-    <string name="today">Today</string>
-    <string name="placeholder_target">Target %1$s kcal (zone %2$s–%3$s)</string>
 </resources>
