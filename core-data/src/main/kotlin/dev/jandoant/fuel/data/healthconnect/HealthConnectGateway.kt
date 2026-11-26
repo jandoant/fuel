@@ -133,7 +133,7 @@ class HealthConnectGateway(
         return SyncResult(imported, deleted, gDays, full)
     }
 
-    suspend fun resetSync() = store.edit { it.remove(tokenKey) }
+    suspend fun resetSync() { store.edit { it.remove(tokenKey) } }
 
     private fun readableTypes(granted: Set<String>): Set<KClass<out Record>> = buildSet {
         add(WeightRecord::class)
