@@ -44,11 +44,11 @@ class VoiceMatcher(private val foods: FoodRepository) {
 
     suspend fun candidates(query: String, country: String): List<VoiceCandidate> {
         for (q in queryVariants(query)) {
-            val local = foods.searchLocal(q)
+            val local = foods.searchLocal(q).filter { it.hasEnergy }
             if (local.isNotEmpty()) return local.take(5).map { VoiceCandidate.Local(it) }
         }
         return when (val r = foods.searchOff(query, country)) {
-            is OffResult.Ok -> r.value.take(5).map { VoiceCandidate.Remote(it) }
+            is OffResult.Ok -> r.value.filter { it.hasNutrition }.take(5).map { VoiceCandidate.Remote(it) }
             else -> emptyList()
         }
     }
