@@ -40,7 +40,10 @@ class AppContainer(context: Context, inMemoryDb: Boolean = false) {
 
     init {
         plan.sink = HealthConnectMirror(healthConnect, plan, appScope)
-        appScope.launch { db.ensureSeeded() }
+        appScope.launch {
+            db.ensureSeeded()
+            runCatching { foods.repairIncomplete() }
+        }
     }
 }
 

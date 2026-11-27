@@ -181,7 +181,7 @@ private fun FoodRow(item: FoodItem, onOpen: () -> Unit, onAdd: () -> Unit) {
         is FoodItem.Recipe -> Triple(item.recipe.numbers, "1 portion", "Recipe · ${item.recipe.ingredients.size} ingr.")
         is FoodItem.Remote -> {
             val g = item.product.servingGrams ?: 100.0
-            Triple(Nutrients.forGrams(item.product.per100g, g).macros(), "${g.roundToInt()} g", null)
+            Triple(if (item.product.hasNutrition) Nutrients.forGrams(item.product.per100g, g).macros() else null, "${g.roundToInt()} g", null)
         }
     }
     Row(
@@ -202,11 +202,12 @@ private fun FoodRow(item: FoodItem, onOpen: () -> Unit, onAdd: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(meta, style = FuelType.Meta, color = FuelColors.Muted, maxLines = 1)
                     Spacer(Modifier.width(6.dp))
-                    MacroInline(numbers, style = FuelType.Meta, showFiber = false)
+                    if (numbers != null) MacroInline(numbers, style = FuelType.Meta, showFiber = false)
+                    else Text("no nutrition data", style = FuelType.Meta, color = FuelColors.WarningText)
                 }
             }
         }
-        Text("${numbers.kcal} kcal", style = FuelType.Small, color = FuelColors.Ink)
+        Text(numbers?.let { "${it.kcal} kcal" } ?: "— kcal", style = FuelType.Small, color = if (numbers == null) FuelColors.Muted else FuelColors.Ink)
         Box(
             Modifier.padding(horizontal = 4.dp).size(44.dp).clip(CircleShape).clickable(role = Role.Button, onClick = onAdd).semantics { contentDescription = "Add ${item.name}" },
             contentAlignment = Alignment.Center,

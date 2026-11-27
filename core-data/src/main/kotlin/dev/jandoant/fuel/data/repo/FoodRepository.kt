@@ -72,16 +72,35 @@ class FoodRepository(
     suspend fun byBarcode(barcode: String, country: String): OffResult<Food> {
         dao.byBarcode(barcode)?.let { return OffResult.Ok(it.toDomain(dao.unitsFor(listOf(it.id)))) }
         return when (val r = off.product(barcode, country)) {
-            is OffResult.Ok -> OffResult.Ok(cache(r.value))
+            is OffResult.Ok -> OffResult.Ok(store(r.value))
             OffResult.NotFound -> OffResult.NotFound
             is OffResult.Error -> r
         }
     }
 
+    /**
+     * Re-fetches cached Open Food Facts foods that have no energy value (cached from incomplete search results
+     * before 2026-11-27). Entries reference the food, so they show the right numbers afterwards. Returns the count.
+     */
+    suspend fun repairIncomplete(): Int {
+        val broken = dao.all().filter { it.source == FoodSource.OPEN_FOOD_FACTS.name && it.barcode != null && !DbJson.decode(it.nutrientsJson).has(dev.jandoant.fuel.core.model.Nutrient.ENERGY) }
+        var fixed = 0
+        for (f in broken) {
+            val r = off.product(f.barcode!!) as? OffResult.Ok ?: continue
+            if (r.value.hasNutrition) { store(r.value); fixed++ }
+        }
+        return fixed
+    }
+
     suspend fun searchOff(q: String, country: String): OffResult<List<OffProduct>> = off.search(q, country)
 
     /** Caches a product from Open Food Facts (or returns the cached one with the same barcode). */
-    suspend fun cache(p: OffProduct): Food = db.tx {
+    suspend fun cache(p: OffProduct): Food {
+        val full = if (p.hasNutrition) p else (off.product(p.barcode) as? OffResult.Ok)?.value ?: p
+        return store(full)
+    }
+
+    private suspend fun store(p: OffProduct): Food = db.tx {
         val existing = dao.byBarcode(p.barcode)
         val id = if (existing != null) {
             // Refresh source values; local overrides and units stay.

@@ -12,6 +12,9 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
@@ -35,7 +38,10 @@ data class OffProduct(
     val servingLabel: String?,
     /** Package size in grams (e.g. a 500 g tub). */
     val packageGrams: Double?,
-)
+) {
+    /** False when Open Food Facts has no energy value — such a product must not be shown as 0 kcal. */
+    val hasNutrition: Boolean get() = per100g.has(dev.jandoant.fuel.core.model.Nutrient.ENERGY)
+}
 
 sealed interface OffResult<out T> {
     data class Ok<T>(val value: T) : OffResult<T>
@@ -87,7 +93,7 @@ class OpenFoodFactsClient(
         if (resp.status == HttpStatusCode.OK) {
             val root = json.parseToJsonElement(resp.bodyAsText()).jsonObject
             val hits = root["hits"]?.jsonArray.orEmpty().mapNotNull { (it as? JsonObject)?.let { p -> parseProduct(p, country) } }
-            return OffResult.Ok(hits)
+            return OffResult.Ok(withNutrition(hits, country))
         }
         val legacy = http.get("$baseUrl/cgi/search.pl") {
             parameter("search_terms", query)
@@ -106,6 +112,17 @@ class OpenFoodFactsClient(
         OffResult.Ok(root["products"]?.jsonArray.orEmpty().mapNotNull { (it as? JsonObject)?.let { p -> parseProduct(p, country) } })
     }
 
+    /**
+     * The search index often has no nutriments for a product (e.g. most "Olivenöl" hits), which would show as
+     * 0 kcal. Hits without energy are completed from the product API (in parallel, at most [ENRICH_LIMIT]); hits that
+     * still have no energy stay in the list flagged by [OffProduct.hasNutrition] and are never shown as 0 kcal.
+     */
+    private suspend fun withNutrition(hits: List<OffProduct>, country: String): List<OffProduct> = coroutineScope {
+        val missing = hits.withIndex().filter { !it.value.hasNutrition }.take(ENRICH_LIMIT)
+        val full = missing.map { (i, p) -> async { i to (product(p.barcode, country) as? OffResult.Ok)?.value } }.awaitAll().toMap()
+        hits.mapIndexed { i, p -> full[i]?.takeIf { it.hasNutrition } ?: p }
+    }
+
     private inline fun <T> runCatchingOff(block: () -> OffResult<T>): OffResult<T> = try {
         block()
     } catch (e: Exception) {
@@ -115,6 +132,7 @@ class OpenFoodFactsClient(
 
     companion object {
         /** No personal contact data is sent; see docs/decisions.md. */
+        const val ENRICH_LIMIT = 10
         const val USER_AGENT = "Fuel/1.0 (personal Android app, non-commercial)"
 
         const val FIELDS = "code,product_name,product_name_de,product_name_en,generic_name,brands,nutriments," +

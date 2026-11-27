@@ -94,6 +94,30 @@ class OpenFoodFactsTest {
         assertTrue(down.message.contains("503"))
     }
 
+    /** Real shapes from 2026-11-27: the search index returned "Olivenöl" hits without nutriments. */
+    @Test fun `search hits without nutriments are completed from the product API, never shown as 0 kcal`() = runTest {
+        val search = """{"hits":[
+            {"code":"4056489640981","product_name":"Olivenöl","brands":["Lidl"]},
+            {"code":"0000000000001","product_name":"Olivenöl ohne Daten"}]}"""
+        val product = """{"code":"4056489640981","status":1,"product":{"code":"4056489640981","product_name_de":"Natives Olivenöl extra",
+            "nutriments":{"energy":3447,"energy-kcal":824,"energy-kcal_100g":824,"energy_100g":3447,"fat_100g":91.6,
+            "saturated-fat_100g":14,"carbohydrates_100g":0,"sugars_100g":0,"proteins_100g":0,"salt_100g":0}}}"""
+        val engine = MockEngine { req ->
+            when {
+                req.url.host == "search.openfoodfacts.org" -> respond(search, HttpStatusCode.OK)
+                req.url.encodedPath.endsWith("/4056489640981") -> respond(product, HttpStatusCode.OK)
+                else -> respond("""{"status":0}""", HttpStatusCode.OK)
+            }
+        }
+        @Suppress("UNCHECKED_CAST")
+        val list = (OpenFoodFactsClient(HttpClient(engine)).search("Olivenöl") as OffResult.Ok<List<dev.jandoant.fuel.data.off.OffProduct>>).value
+        assertEquals(824.0, list[0].per100g[Nutrient.ENERGY])
+        assertEquals(91.6, list[0].per100g[Nutrient.FAT])
+        assertTrue(list[0].hasNutrition)
+        assertFalse(list[1].hasNutrition) // stays in the list, flagged — not 0 kcal
+        assertFalse(list[1].per100g.has(Nutrient.ENERGY))
+    }
+
     @Test fun `rate limiter refuses beyond the budget and recovers after the window`() = runTest {
         var now = 0L
         val rl = RateLimiter(2, 1000) { now }
