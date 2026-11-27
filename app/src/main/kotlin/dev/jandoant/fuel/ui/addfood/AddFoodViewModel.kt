@@ -228,6 +228,63 @@ class AddFoodViewModel(private val c: AppContainer, private val route: AddFoodRo
         }
     }
 
+    // --- Voice ---
+
+    val voice = MutableStateFlow<VoiceReview?>(null)
+    private val matcher = VoiceMatcher(c.foods)
+
+    /** Dictated text → items → matched foods, shown for confirmation before anything is added. */
+    fun onVoice(text: String) {
+        val items = dev.jandoant.fuel.core.model.VoiceParser.parse(text)
+        if (items.isEmpty()) { c.messages.show("Nothing recognised in “$text”"); return }
+        voice.value = VoiceReview(text, items.map { VoiceLine(it) })
+        items.forEachIndexed { i, item ->
+            viewModelScope.launch {
+                val country = c.settings.current().offCountry
+                val cands = runCatching { matcher.candidates(item.query, country) }.getOrDefault(emptyList())
+                val resolved = cands.firstOrNull()?.let { runCatching { matcher.portion(item, it) }.getOrNull() }
+                updateLine(i) { it.copy(candidates = cands, chosen = 0, portion = resolved?.first, note = resolved?.second, loading = false, include = resolved != null) }
+            }
+        }
+    }
+
+    fun chooseCandidate(index: Int, candidate: Int) {
+        val line = voice.value?.lines?.getOrNull(index) ?: return
+        val cand = line.candidates.getOrNull(candidate) ?: return
+        updateLine(index) { it.copy(chosen = candidate, loading = true) }
+        viewModelScope.launch {
+            val (portion, note) = matcher.portion(line.item, cand)
+            updateLine(index) { it.copy(portion = portion, note = note, loading = false, include = true) }
+        }
+    }
+
+    fun changeVoicePortion(index: Int, unit: ServingUnit, amount: Double) = updateLine(index) { it.withPortion(unit, amount).copy(note = null) }
+    fun toggleVoiceLine(index: Int) = updateLine(index) { it.copy(include = !it.include && it.portion != null) }
+    fun closeVoice() { voice.value = null }
+
+    private fun updateLine(index: Int, f: (VoiceLine) -> VoiceLine) {
+        val v = voice.value ?: return
+        voice.value = v.copy(lines = v.lines.mapIndexed { i, l -> if (i == index) f(l) else l })
+    }
+
+    fun addVoice() {
+        val portions = voice.value?.toAdd.orEmpty()
+        if (portions.isEmpty()) return
+        viewModelScope.launch {
+            busy.value = true
+            val drafts = portions.map { PortionDraft(it.food.id, it.unit.id, it.amount) }
+            when (route.target) {
+                AddTarget.PLAN -> drafts.forEach { c.plan.addSingle(LocalDate.ofEpochDay(route.date), route.slotId, it) }
+                AddTarget.ENTRY -> drafts.forEach { c.plan.addIngredient(route.targetId, it) }
+                AddTarget.RECIPE -> drafts.forEach { c.recipes.addIngredient(route.targetId, it) }
+            }
+            c.messages.show("Added ${portions.size} ${if (portions.size == 1) "food" else "foods"} to ${destination.value}")
+            busy.value = false
+            voice.value = null
+            done.value = true
+        }
+    }
+
     // --- Barcode ---
 
     private var lastScan: String? = null

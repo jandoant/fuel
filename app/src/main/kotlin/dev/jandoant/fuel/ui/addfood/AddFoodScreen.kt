@@ -89,13 +89,14 @@ fun AddFoodScreen(nav: Navigator, route: AddFoodRoute) {
     val done by vm.done.collectAsStateWithLifecycle()
     val notFound by vm.notFoundBarcode.collectAsStateWithLifecycle()
     LaunchedEffect(done) { if (done) nav.back() }
+    val voiceUi = rememberVoiceUi(vm::onVoice)
     val s = state
 
     Column(Modifier.fillMaxSize().testTag("addFood")) {
         Column(Modifier.padding(start = 18.dp, end = 18.dp, top = 14.dp, bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             SubScreenHeader("Add food", nav::back, subtitle = s?.destinationText?.let { "Adding to $it" })
             if (query.isBlank()) BarcodeScannerBox(vm::onBarcode)
-            SearchField(query, { vm.query.value = it })
+            SearchField(query, { vm.query.value = it }, onMic = { voiceUi.startOrAsk() })
             if (query.isBlank()) SegmentedTabs(ListTab.entries.map { it.label }, s?.tab?.ordinal ?: 0, { vm.tab.value = ListTab.entries[it] })
         }
         LazyColumn(Modifier.weight(1f).fillMaxWidth(), contentPadding = PaddingValues(start = 18.dp, end = 18.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -131,6 +132,8 @@ fun AddFoodScreen(nav: Navigator, route: AddFoodRoute) {
     }
 
     if (sheet != null && s != null) AddSheetView(vm, s)
+    VoiceOverlay(voiceUi)
+    VoiceReviewSheet(vm, s?.destinationText.orEmpty())
     notFound?.let { code ->
         AlertDialog(
             onDismissRequest = vm::resetScan,
@@ -150,7 +153,7 @@ private fun openDetail(nav: Navigator, item: FoodItem) = when (item) {
 }
 
 @Composable
-private fun SearchField(value: String, onChange: (String) -> Unit) {
+private fun SearchField(value: String, onChange: (String) -> Unit, onMic: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().height(48.dp).background(FuelColors.Surface, FuelShapes.Item).border(1.dp, FuelColors.InputBorder, FuelShapes.Item).padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -167,6 +170,7 @@ private fun SearchField(value: String, onChange: (String) -> Unit) {
             )
         }
         if (value.isNotEmpty()) dev.jandoant.fuel.ui.components.IconButton44(FuelIcons.CLOSE, "Clear search", { onChange("") }, tint = FuelColors.Muted, iconSize = 16.dp)
+        else dev.jandoant.fuel.ui.components.IconButton44(FuelIcons.MIC, "Speak foods (German)", onMic, tint = FuelColors.AccentText, iconSize = 20.dp)
     }
 }
 
