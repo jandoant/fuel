@@ -92,6 +92,11 @@ fun FoodEditorScreen(nav: Navigator, route: FoodEditorRoute) {
         }
         FuelCard(padding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
             SectionTitle("Per 100 g")
+            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("Energy in kJ (fills kcal)", style = FuelType.Small, color = FuelColors.Muted, modifier = Modifier.weight(1f))
+                NumberField(values[Nutrient.ENERGY]?.let { it * 4.184 }, { kj -> if (kj == null) values.remove(Nutrient.ENERGY) else values[Nutrient.ENERGY] = kj / 4.184 }, "Energy in kilojoules", width = 80.dp, allowEmpty = true)
+                Text(" kJ", style = FuelType.Meta, color = FuelColors.Muted, modifier = Modifier.width(36.dp))
+            }
             (Nutrient.LABEL + Nutrient.MICROS).forEach { n ->
                 Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(n.label.replaceFirstChar { it.uppercase() }, style = FuelType.Small, color = if (n in Nutrient.MICROS) FuelColors.Muted else FuelColors.Ink, modifier = Modifier.weight(1f))

@@ -56,6 +56,11 @@ class OpenFoodFactsTest {
     @Test fun `kJ only products get kcal`() {
         val root = OpenFoodFactsClient.json.parseToJsonElement("""{"code":"1","product_name":"X","nutriments":{"energy_100g":418.4}}""").jsonObject
         assertEquals(100.0, OpenFoodFactsClient.parseProduct(root)!!.per100g[Nutrient.ENERGY], 1e-9)
+        val kj = OpenFoodFactsClient.json.parseToJsonElement("""{"code":"2","product_name":"Y","nutriments":{"energy-kj_100g":3447}}""").jsonObject
+        assertEquals(823.85, OpenFoodFactsClient.parseProduct(kj)!!.per100g[Nutrient.ENERGY], 0.01)
+        // kcal given → used as is, kJ ignored
+        val both = OpenFoodFactsClient.json.parseToJsonElement("""{"code":"3","product_name":"Z","nutriments":{"energy-kcal_100g":824,"energy_100g":3447}}""").jsonObject
+        assertEquals(824.0, OpenFoodFactsClient.parseProduct(both)!!.per100g[Nutrient.ENERGY])
     }
 
     @Test fun `product lookup sends a custom user agent and handles not found`() = runTest {

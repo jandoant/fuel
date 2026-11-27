@@ -133,6 +133,9 @@ class OpenFoodFactsClient(
     companion object {
         /** No personal contact data is sent; see docs/decisions.md. */
         const val ENRICH_LIMIT = 10
+
+        /** 1 kcal = 4.184 kJ. */
+        fun kjToKcal(kj: Double): Double = kj / 4.184
         const val USER_AGENT = "Fuel/1.0 (personal Android app, non-commercial)"
 
         const val FIELDS = "code,product_name,product_name_de,product_name_en,generic_name,brands,nutriments," +
@@ -181,7 +184,9 @@ class OpenFoodFactsClient(
                     n.num(key)?.let { values[nutrient] = it * factor }
                 }
                 // Some products only have kJ.
-                if (!values.containsKey(Nutrient.ENERGY)) n.num("energy_100g")?.let { values[Nutrient.ENERGY] = it / 4.184 }
+                if (!values.containsKey(Nutrient.ENERGY)) {
+                    (n.num("energy-kj_100g") ?: n.num("energy_100g"))?.let { values[Nutrient.ENERGY] = kjToKcal(it) }
+                }
             }
             return OffProduct(
                 barcode = code,
