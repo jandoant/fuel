@@ -73,6 +73,27 @@ class OpenFoodFactsTest {
         assertEquals(OffResult.NotFound, client.product("000"))
     }
 
+    @Test fun `search uses the search service and falls back to the legacy endpoint`() = runTest {
+        val paths = mutableListOf<String>()
+        val hits = """{"hits":[{"code":"1","product_name":"Skyr citron","brands":["Lidl"],"nutriments":{"energy-kcal_100g":89}}]}"""
+        val engine = MockEngine { req ->
+            paths += req.url.host + req.url.encodedPath
+            when {
+                req.url.host == "search.openfoodfacts.org" -> respond(hits, HttpStatusCode.OK)
+                else -> respond("", HttpStatusCode.ServiceUnavailable)
+            }
+        }
+        val r = OpenFoodFactsClient(HttpClient(engine)).search("skyr")
+        assertIs<OffResult.Ok<*>>(r)
+        @Suppress("UNCHECKED_CAST") val list = (r as OffResult.Ok<List<dev.jandoant.fuel.data.off.OffProduct>>).value
+        assertEquals("Lidl", list.single().brand)
+        assertEquals(listOf("search.openfoodfacts.org/search"), paths)
+
+        val down = OpenFoodFactsClient(HttpClient(MockEngine { respond("", HttpStatusCode.ServiceUnavailable) })).search("skyr")
+        assertIs<OffResult.Error>(down)
+        assertTrue(down.message.contains("503"))
+    }
+
     @Test fun `rate limiter refuses beyond the budget and recovers after the window`() = runTest {
         var now = 0L
         val rl = RateLimiter(2, 1000) { now }

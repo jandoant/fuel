@@ -15,6 +15,7 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -49,6 +50,7 @@ sealed interface OffResult<out T> {
 class OpenFoodFactsClient(
     private val http: HttpClient = defaultClient(),
     private val baseUrl: String = "https://world.openfoodfacts.org",
+    private val searchUrl: String = "https://search.openfoodfacts.org",
     private val clock: () -> Long = System::currentTimeMillis,
 ) {
     private val productLimiter = RateLimiter(100, 60_000, clock)
@@ -70,9 +72,24 @@ class OpenFoodFactsClient(
         parseProduct(product, country)?.let { OffResult.Ok(it) } ?: OffResult.NotFound
     }
 
+    /**
+     * Text search via Open Food Facts' search service (search-a-licious). The legacy `/cgi/search.pl` endpoint is
+     * only used as a fallback — it is frequently throttled and answers 503.
+     */
     suspend fun search(query: String, country: String = "de", pageSize: Int = 20): OffResult<List<OffProduct>> = runCatchingOff {
         searchLimiter.acquire() ?: return OffResult.Error("Search limit reached — try again in a minute")
-        val resp = http.get("$baseUrl/cgi/search.pl") {
+        val resp = http.get("$searchUrl/search") {
+            parameter("q", query)
+            parameter("page_size", pageSize)
+            parameter("langs", if (country == "world") "en" else "$country,en")
+            parameter("fields", FIELDS)
+        }
+        if (resp.status == HttpStatusCode.OK) {
+            val root = json.parseToJsonElement(resp.bodyAsText()).jsonObject
+            val hits = root["hits"]?.jsonArray.orEmpty().mapNotNull { (it as? JsonObject)?.let { p -> parseProduct(p, country) } }
+            return OffResult.Ok(hits)
+        }
+        val legacy = http.get("$baseUrl/cgi/search.pl") {
             parameter("search_terms", query)
             parameter("search_simple", 1)
             parameter("action", "process")
@@ -82,10 +99,11 @@ class OpenFoodFactsClient(
             parameter("lc", country)
             parameter("cc", country)
         }
-        if (resp.status != HttpStatusCode.OK) return OffResult.Error("Open Food Facts: HTTP ${resp.status.value}")
-        val root = json.parseToJsonElement(resp.bodyAsText()).jsonObject
-        val list = root["products"]?.jsonArray.orEmpty().mapNotNull { (it as? JsonObject)?.let { p -> parseProduct(p, country) } }
-        OffResult.Ok(list)
+        if (legacy.status != HttpStatusCode.OK) {
+            return OffResult.Error("Open Food Facts search is unavailable right now (HTTP ${resp.status.value}). Barcode scanning still works.")
+        }
+        val root = json.parseToJsonElement(legacy.bodyAsText()).jsonObject
+        OffResult.Ok(root["products"]?.jsonArray.orEmpty().mapNotNull { (it as? JsonObject)?.let { p -> parseProduct(p, country) } })
     }
 
     private inline fun <T> runCatchingOff(block: () -> OffResult<T>): OffResult<T> = try {
@@ -150,7 +168,9 @@ class OpenFoodFactsClient(
             return OffProduct(
                 barcode = code,
                 name = name.trim(),
-                brand = p.str("brands")?.split(',')?.firstOrNull()?.trim()?.takeIf { it.isNotBlank() },
+                // "brands" is a comma-separated string in the product API and an array in the search service.
+                brand = ((p["brands"] as? JsonArray)?.firstOrNull()?.jsonPrimitive?.content ?: p.str("brands")?.split(',')?.firstOrNull())
+                    ?.trim()?.takeIf { it.isNotBlank() },
                 per100g = Nutrients(values),
                 servingGrams = p.num("serving_quantity")?.takeIf { it > 0 },
                 servingLabel = p.str("serving_size"),
