@@ -193,7 +193,7 @@ class OpenFoodFactsClient(
                 name = name.trim(),
                 // "brands" is a comma-separated string in the product API and an array in the search service.
                 brand = ((p["brands"] as? JsonArray)?.firstOrNull()?.jsonPrimitive?.content ?: p.str("brands")?.split(',')?.firstOrNull())
-                    ?.trim()?.takeIf { it.isNotBlank() },
+                    ?.trim()?.substringAfter("xx:")?.takeIf { it.isNotBlank() }, // search index tags look like "xx:rapunzel"
                 per100g = Nutrients(values),
                 servingGrams = p.num("serving_quantity")?.takeIf { it > 0 },
                 servingLabel = p.str("serving_size"),

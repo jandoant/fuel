@@ -116,7 +116,8 @@ fun EntryCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(entry.amountText, style = FuelType.TinyStrong, color = FuelColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
                         Spacer(Modifier.width(8.dp))
-                        MacroInline(n)
+                        if (entry.hasMissingValues) Text("values missing", style = FuelType.TinyStrong, color = FuelColors.WarningText, maxLines = 1)
+                        else MacroInline(n)
                     }
                 }
                 Spacer(Modifier.width(8.dp))

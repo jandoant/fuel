@@ -99,6 +99,6 @@ fun FoodListRow(f: Food, onClick: () -> Unit) {
                 if (f.missing.isNotEmpty()) { Spacer(Modifier.width(6.dp)); Text("· values missing", style = FuelType.Meta, color = FuelColors.WarningText) }
             }
         }
-        Text("${numbers.kcal} kcal", style = FuelType.Small, color = FuelColors.Ink, modifier = Modifier.padding(start = 6.dp))
+        Text(if (f.hasEnergy) "${numbers.kcal} kcal" else "— kcal", style = FuelType.Small, color = if (f.hasEnergy) FuelColors.Ink else FuelColors.Muted, modifier = Modifier.padding(start = 6.dp))
     }
 }

@@ -131,7 +131,7 @@ fun AddFoodScreen(nav: Navigator, route: AddFoodRoute) {
         }
     }
 
-    if (sheet != null && s != null) AddSheetView(vm, s)
+    if (sheet != null && s != null) AddSheetView(vm, s) { id -> nav.go(FoodDetailRoute(id)) }
     VoiceOverlay(voiceUi)
     VoiceReviewSheet(vm, s?.destinationText.orEmpty())
     notFound?.let { code ->
@@ -177,7 +177,7 @@ private fun SearchField(value: String, onChange: (String) -> Unit, onMic: () -> 
 @Composable
 private fun FoodRow(item: FoodItem, onOpen: () -> Unit, onAdd: () -> Unit) {
     val (numbers, meta, recipeInfo) = when (item) {
-        is FoodItem.Single -> Triple(item.defaultPortion.numbers, item.defaultPortion.label, null)
+        is FoodItem.Single -> Triple(if (item.food.hasEnergy) item.defaultPortion.numbers else null, item.defaultPortion.label, null)
         is FoodItem.Recipe -> Triple(item.recipe.numbers, "1 portion", "Recipe · ${item.recipe.ingredients.size} ingr.")
         is FoodItem.Remote -> {
             val g = item.product.servingGrams ?: 100.0
@@ -221,7 +221,7 @@ private fun FoodRow(item: FoodItem, onOpen: () -> Unit, onAdd: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddSheetView(vm: AddFoodViewModel, s: AddFoodUiState) {
+private fun AddSheetView(vm: AddFoodViewModel, s: AddFoodUiState, onFillIn: (Long) -> Unit) {
     val sheet by vm.sheet.collectAsStateWithLifecycle()
     val busy by vm.busy.collectAsStateWithLifecycle()
     val sh = sheet ?: return
@@ -247,7 +247,8 @@ private fun AddSheetView(vm: AddFoodViewModel, s: AddFoodUiState) {
                         style = FuelType.Meta, color = FuelColors.Muted,
                     )
                 }
-                MacroInline(sh.numbers, showKcal = true, modifier = Modifier.padding(top = 4.dp))
+                if (sh.portions.all { it.food.hasEnergy }) MacroInline(sh.numbers, showKcal = true, modifier = Modifier.padding(top = 4.dp))
+                else Text("no nutrition data", style = FuelType.MetaStrong, color = FuelColors.WarningText, modifier = Modifier.padding(top = 4.dp))
             }
             if (!sh.isRecipe) {
                 val p = sh.portions.first()
@@ -269,7 +270,17 @@ private fun AddSheetView(vm: AddFoodViewModel, s: AddFoodUiState) {
             }
             s.effect?.let { (before, after) -> EffectPanel(before, after) }
             s.recipeEffect?.let { (before, after) -> RecipeEffect(before, after) }
-            PrimaryButton(sh.addLabel, { scope.launch { vm.add() } }, Modifier.fillMaxWidth().testTag("addButton"), enabled = !busy)
+            val incomplete = sh.portions.filter { !it.food.hasEnergy }.map { it.food }.distinctBy { it.id }
+            incomplete.forEach { f ->
+                Row(
+                    Modifier.fillMaxWidth().background(FuelColors.WarningBg, FuelShapes.Item).padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text("${f.name}: Open Food Facts has no nutrition values. Fill them in from the label first.", style = FuelType.Meta, color = FuelColors.WarningText, modifier = Modifier.weight(1f))
+                    TextLink("Fill in", { vm.close(); onFillIn(f.id) }, color = FuelColors.WarningText)
+                }
+            }
+            PrimaryButton(sh.addLabel, { scope.launch { vm.add() } }, Modifier.fillMaxWidth().testTag("addButton"), enabled = !busy && incomplete.isEmpty())
         }
     }
 }

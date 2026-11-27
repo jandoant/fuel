@@ -33,6 +33,8 @@ data class Food(
     val defaultUnit: ServingUnit get() = units.firstOrNull { it.isDefault } ?: units.firstOrNull { it.isGrams } ?: units.first()
     val gramUnit: ServingUnit get() = units.firstOrNull { it.isGrams } ?: units.first()
     val missing: List<Nutrient> get() = per100g.missing()
+    /** False when the energy value is unknown — the food must not be shown or counted as 0 kcal. */
+    val hasEnergy: Boolean get() = per100g.has(Nutrient.ENERGY)
     fun unit(id: Long): ServingUnit = units.firstOrNull { it.id == id } ?: defaultUnit
     val displayName: String get() = if (brand.isNullOrBlank()) name else "$name ($brand)"
 }
@@ -132,6 +134,8 @@ data class PlanEntry(
     val edited: Boolean get() = isRecipe && templateSnapshot != null && templateSnapshot != portions.map { it.key }
     val amountText: String get() = if (isRecipe) "1 portion" else portions.firstOrNull()?.label.orEmpty()
     val plannedItem: PlannedItem get() = PlannedItem(numbers, eaten)
+    /** Some ingredient has no energy value (its kcal are unknown, not 0). */
+    val hasMissingValues: Boolean get() = portions.any { !it.food.hasEnergy }
 }
 
 enum class MeasurementType { WEIGHT, BODY_FAT, LEAN_MASS }

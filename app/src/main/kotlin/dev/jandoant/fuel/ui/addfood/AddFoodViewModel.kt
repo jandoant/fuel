@@ -174,8 +174,9 @@ class AddFoodViewModel(private val c: AppContainer, private val route: AddFoodRo
             destinationText = dest,
             tab = base.tab,
             query = base.query,
-            items = base.local ?: base.list,
-            remote = base.remote.first.filter { it.product.barcode !in known },
+            // Foods with nutrition data first; ones without energy stay findable but sink to the end.
+            items = (base.local ?: base.list).sortedBy { it is FoodItem.Single && !it.food.hasEnergy },
+            remote = base.remote.first.filter { it.product.barcode !in known }.sortedBy { !it.product.hasNutrition },
             remoteStatus = base.remote.second,
             allowRecipes = route.target == AddTarget.PLAN,
             effect = effect,
